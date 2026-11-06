@@ -1,6 +1,6 @@
 #########################################################################
 # KI18N Translation Domain for this library
-add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwincompositing_x11\")
+add_definitions(-DTRANSLATION_DOMAIN=\"gxde-kcmkwincompositing_x11\")
 
 ################# configure checks and create the configured files #################
 
@@ -12,15 +12,15 @@ set(kwincompositing_SRC
 kconfig_add_kcfg_files(kwincompositing_SRC kwincompositing_setting.kcfgc GENERATE_MOC)
 
 qt_add_dbus_interface(kwincompositing_SRC
-    ${KWin_SOURCE_DIR}/src/org.kde.kwin.Compositing.xml kwin_compositing_interface
+    ${PROJECT_SOURCE_DIR}/src/org.kde.kwin.Compositing.xml kwin_compositing_interface
 )
 
 ki18n_wrap_ui(kwincompositing_SRC compositing.ui)
 
-kcoreaddons_add_plugin(kwincompositing SOURCES ${kwincompositing_SRC} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
-kcmutils_generate_desktop_file(kwincompositing)
+kcoreaddons_add_plugin(gxde-kwincompositing_x11 SOURCES ${kwincompositing_SRC} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
+gxde_generate_kcm_desktop_file(gxde-kwincompositing_x11 kwincompositing.json)
 
-target_link_libraries(kwincompositing
+target_link_libraries(gxde-kwincompositing_x11
     Qt::DBus
     Qt::Widgets
 

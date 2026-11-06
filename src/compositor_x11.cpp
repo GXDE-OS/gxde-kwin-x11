@@ -98,7 +98,7 @@ X11Compositor::X11Compositor(QObject *parent)
     connect(&m_releaseSelectionTimer, &QTimer::timeout, this, &X11Compositor::releaseCompositorSelection);
 
     QAction *toggleAction = new QAction(this);
-    toggleAction->setProperty("componentName", QStringLiteral("kwin"));
+    toggleAction->setProperty("componentName", QStringLiteral("gxde-kwin_x11"));
     toggleAction->setObjectName("Suspend Compositing");
     toggleAction->setText(i18n("Suspend Compositing"));
     KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>() << (Qt::SHIFT | Qt::ALT | Qt::Key_F12));
@@ -455,7 +455,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         qCDebug(KWIN_CORE) << "Graphics reset occurred";
 #if KWIN_BUILD_NOTIFICATIONS
         auto notification = new KNotification(QStringLiteral("graphicsreset"));
-        notification->setComponentName(QStringLiteral("kwin-x11"));
+        notification->setComponentName(QStringLiteral("gxde-kwin_x11"));
         notification->setText(i18n("Desktop effects were restarted due to a graphics reset"));
         notification->sendEvent();
 #endif

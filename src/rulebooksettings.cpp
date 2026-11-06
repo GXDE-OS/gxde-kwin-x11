@@ -9,6 +9,7 @@
 */
 
 #include "rulebooksettings.h"
+#include "config-kwin.h"
 #include "rulesettings.h"
 
 #include <QUuid>
@@ -21,7 +22,7 @@ RuleBookSettings::RuleBookSettings(KSharedConfig::Ptr config, QObject *parent)
 }
 
 RuleBookSettings::RuleBookSettings(QObject *parent)
-    : RuleBookSettings(KSharedConfig::openConfig(QStringLiteral("kwinrulesrc"), KConfig::NoGlobals), parent)
+    : RuleBookSettings(KSharedConfig::openConfig(KWIN_RULES_CONFIG, KConfig::NoGlobals), parent)
 {
 }
 

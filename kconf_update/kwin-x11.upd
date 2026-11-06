@@ -4,21 +4,21 @@
 Version=6
 
 # Reset ActiveMouseScreen config option.
-Id=kwin-6.0-reset-active-mouse-screen-x11
-Script=kwin-6.0-reset-active-mouse-screen-x11
+Id=gxde-kwin-6.0-reset-active-mouse-screen-x11
+Script=gxde-kwin-6.0-reset-active-mouse-screen-x11
 
 # Delete old desktop switching shortcuts.
-Id=kwin-6.0-delete-desktop-switching-shortcuts-x11
-Script=kwin-6.0-delete-desktop-switching-shortcuts-x11
+Id=gxde-kwin-6.0-delete-desktop-switching-shortcuts-x11
+Script=gxde-kwin-6.0-delete-desktop-switching-shortcuts-x11
 
 # Delete old tabbox defaults
-Id=kwin-6.0-remove-breeze-tabbox-default-x11
-Script=kwin-6.0-remove-breeze-tabbox-default-x11
+Id=gxde-kwin-6.0-remove-breeze-tabbox-default-x11
+Script=gxde-kwin-6.0-remove-breeze-tabbox-default-x11
 
 # Delete old gridview and expose defaults
-Id=kwin-6.1-remove-gridview-expose-shortcuts-x11
-Script=kwin-6.1-remove-gridview-expose-shortcuts-x11
+Id=gxde-kwin-6.1-remove-gridview-expose-shortcuts-x11
+Script=gxde-kwin-6.1-remove-gridview-expose-shortcuts-x11
 
 # Unload showpaint effect and delete old shortcut
-Id=kwin-6.5-showpaint-changes-x11
-Script=kwin-6.5-showpaint-changes-x11
+Id=gxde-kwin-6.5-showpaint-changes-x11
+Script=gxde-kwin-6.5-showpaint-changes-x11

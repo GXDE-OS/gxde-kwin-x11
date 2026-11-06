@@ -97,7 +97,7 @@
         "Name[zh_CN]": "屏幕边缘",
         "Name[zh_TW]": "螢幕邊緣"
     },
-    "X-DocPath": "kcontrol/kwinscreenedges-x11/index.html",
+    "X-DocPath": "kcontrol/gxde-kwinscreenedges-x11/index.html",
     "X-KDE-Keywords": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,borders,screen borders,desktop borders,desktop corners,corners,sticky corners,sticky edges,edge barriers,corner barriers",
     "X-KDE-Keywords[ar]": "كوين،نافذة،مدير،تأثير،زاوية،حافة،حدود،إجراء،تبديل،سطح المكتب،حواف شاشة كوين،حواف سطح المكتب،حواف الشاشة،تكبير النوافذ،تجانب النوافذ،جانب الشاشة،سلوك الشاشة،تبديل سطح المكتب،سطح المكتب الافتراضي،شاشة زوايا,حدود,حدود الشاشة,حدود سطح المكتب,زوايا سطح المكتب,زوايا,زوايا لاصقة,حواف لاصقة,حواجز الحافة,حواجز الزاوية",
     "X-KDE-Keywords[az]": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,borders,screen borders,desktop borders,desktop corners,corners,sticky corners,sticky edges,edge barriers,corner barriers,kwin,pəncərə,menecer,effekt,künc,kənar,sərhəd,fəaliyyət,keçirici,iş masası,kwin ekran kənarları, masa üstü kənarları, ekran kənarları, pəncərələri böyüt, kafel pəncərələri, yan ekran, ekran davranışı, iş masasını dəyişdirin, virtual iş masası, ekran küncləri, haşiyələr,ekran haşiyələri,iş masası haşiyələri,iş masası küncləri,künclər,yapışqan künclər, yapışqan kənarlar, kənar maneələr, künc maneələri",

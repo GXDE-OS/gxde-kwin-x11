@@ -56,7 +56,7 @@ using namespace TabBox;
 
 KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
-    , m_config(KSharedConfig::openConfig("kwinrc"))
+    , m_config(KSharedConfig::openConfig("gxde-kwin_x11rc"))
     , m_data(new KWinTabboxData(this))
 {
     QTabWidget *tabWidget = new QTabWidget(widget());
@@ -74,7 +74,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
-    KNSWidgets::Button *ghnsButton = new KNSWidgets::Button(i18n("Get New Task Switcher Styles…"), QStringLiteral("kwinswitcher-x11.knsrc"), widget());
+    KNSWidgets::Button *ghnsButton = new KNSWidgets::Button(i18n("Get New Task Switcher Styles…"), QStringLiteral("gxde-kwinswitcher-x11.knsrc"), widget());
     connect(ghnsButton, &KNSWidgets::Button::dialogFinished, this, [this](auto changedEntries) {
         if (!changedEntries.isEmpty()) {
             initLayoutLists();
@@ -143,7 +143,7 @@ static QList<KPackage::Package> availableLnFPackages()
         pkg.setFallbackPackage(KPackage::Package());
         if (!pkg.filePath("defaults").isEmpty()) {
             KSharedConfigPtr conf = KSharedConfig::openConfig(pkg.filePath("defaults"));
-            KConfigGroup cg = KConfigGroup(conf, QStringLiteral("kwinrc"));
+            KConfigGroup cg = KConfigGroup(conf, QStringLiteral("gxde-kwin_x11rc"));
             cg = KConfigGroup(&cg, QStringLiteral("WindowSwitcher"));
             if (!cg.readEntry("LayoutName", QString()).isEmpty()) {
                 packages << pkg;

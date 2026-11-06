@@ -11,7 +11,7 @@ import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.kwin as KWinComponents
-import org.kde.kwin_x11.private.effects
+import org.gxde.kwin_x11.private.effects
 import org.kde.milou as Milou
 import org.kde.plasma.components as PC3
 import org.kde.plasma.extras as PlasmaExtras
@@ -375,23 +375,23 @@ FocusScope {
             spacing: Kirigami.Units.largeSpacing
 
             Kirigami.PlaceholderMessage {
-                text: i18ndc("kwin_x11", "@info:placeholder", "No other Virtual Desktops to show")
+                text: i18ndc("gxde-kwin_x11", "@info:placeholder", "No other Virtual Desktops to show")
                 icon.name: "virtual-desktops-symbolic"
             }
 
             PC3.Button {
                 Layout.alignment: Qt.AlignHCenter
-                text: i18ndc("kwin_x11", "@action:button", "Add Virtual Desktop")
+                text: i18ndc("gxde-kwin_x11", "@action:button", "Add Virtual Desktop")
                 icon.name: "list-add-symbolic"
                 onClicked: desktopModel.create(desktopModel.rowCount())
             }
 
             PC3.Button {
                 Layout.alignment: Qt.AlignHCenter
-                text: i18ndc("kwin_x11", "@action:button", "Configure Virtual Desktops…")
+                text: i18ndc("gxde-kwin_x11", "@action:button", "Configure Virtual Desktops…")
                 icon.name: "preferences-virtual-desktops"
                 onClicked: {
-                    KCM.KCMLauncher.openSystemSettings("kcm_kwin_virtualdesktops_x11")
+                    KCM.KCMLauncher.openSystemSettings("gxde-kcm_kwin_virtualdesktops_x11")
                     effect.deactivate();
                 }
             }
@@ -739,7 +739,7 @@ FocusScope {
                 visible: allDesktopHeaps.currentHeap.count === 0 && effect.filterWindows
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: i18ndc("kwin_x11", "@info:placeholder", "No matching windows")
+                text: i18ndc("gxde-kwin_x11", "@info:placeholder", "No matching windows")
             }
 
             Milou.ResultsView {

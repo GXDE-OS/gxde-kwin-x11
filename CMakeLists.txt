@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 set(PROJECT_VERSION "6.7.6") # Handled by release scripts
-project(KWin VERSION ${PROJECT_VERSION})
+project(gxde-kwin_x11 VERSION ${PROJECT_VERSION})
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 23)
@@ -14,8 +14,17 @@ set(KDE_COMPILERSETTINGS_LEVEL "5.82")
 
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 
-set(KWIN_DATADIR kwin-x11)
-set(KWIN_PLUGINDIR kwin-x11)
+# Keep every installed artifact owned by this fork in its own namespace so it
+# can be installed alongside the upstream KWin packages.
+set(GXDE_KWIN_NAME "gxde-kwin_x11")
+# Runtime data is mirrored below the build-tree bin directory. It therefore
+# cannot have the same basename as the executable (a directory and an ELF
+# cannot both be bin/gxde-kwin_x11).
+set(KWIN_DATADIR "${GXDE_KWIN_NAME}-data")
+set(KWIN_PLUGINDIR "${GXDE_KWIN_NAME}")
+set(KWIN_CONFIG "${GXDE_KWIN_NAME}rc")
+set(KWIN_RULES_CONFIG "${GXDE_KWIN_NAME}rulesrc")
+set(KWIN_OUTPUT_CONFIG "${GXDE_KWIN_NAME}outputconfig.json")
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
@@ -47,13 +56,29 @@ include(ECMSetupVersion)
 include(ECMQmlModule)
 include(ECMDeprecationSettings)
 
+# KCMUtils derives the desktop-file name, Exec argument, and QML resource
+# prefix from the CMake target name. This helper lets GXDE KCM targets keep
+# using the upstream metadata source files while emitting GXDE-specific
+# desktop entries.
+function(gxde_generate_kcm_desktop_file target metadata_file)
+    set(gxde_metadata "${CMAKE_CURRENT_BINARY_DIR}/${target}.json")
+    set(gxde_desktop "${CMAKE_CURRENT_BINARY_DIR}/${target}.desktop")
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${metadata_file}"
+        "${gxde_metadata}" COPYONLY)
+    add_custom_target(${target}-kcm-desktop-gen
+        COMMAND KF6::kcmdesktopfilegenerator ${gxde_metadata} ${gxde_desktop}
+        DEPENDS ${gxde_metadata})
+    add_dependencies(${target} ${target}-kcm-desktop-gen)
+    install(FILES ${gxde_desktop} DESTINATION ${KDE_INSTALL_APPDIR})
+endfunction()
+
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
 option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_X11 "Enable building X11 common code and Xwayland support" ON)
-option(KWIN_BUILD_X11_BACKEND "Enable building kwin_x11" ON)
+option(KWIN_BUILD_X11_BACKEND "Enable building gxde-kwin_x11" ON)
 option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 option(KWIN_BUILD_NIGHTLIGHT "Enable building of KWin with nightlight support" ON)
@@ -316,7 +341,7 @@ if (KWIN_BUILD_X11)
     set(XWAYLAND_SESSION_SCRIPTS "/etc/xdg/Xwayland-session.d")
 
 else()
-    set(KWIN_BUILD_X11_BACKEND OFF CACHE BOOL "Enable building kwin_x11" FORCE)
+    set(KWIN_BUILD_X11_BACKEND OFF CACHE BOOL "Enable building gxde-kwin_x11" FORCE)
 endif()
 
 find_package(UDev)
@@ -493,12 +518,41 @@ ecm_setup_qtplugin_macro_names(
 
 if (KF6DocTools_FOUND)
     add_subdirectory(doc)
-    kdoctools_install(po)
+
+    # Localized handbooks are copied to GXDE-specific module paths before
+    # installation so they don't overlap the upstream KWin documentation.
+    set(GXDE_DOC_PO_DIR "${CMAKE_CURRENT_BINARY_DIR}/po-gxde-docs")
+    file(GLOB_RECURSE KWIN_LOCALIZED_DOCS
+        RELATIVE "${PROJECT_SOURCE_DIR}/po"
+        "${PROJECT_SOURCE_DIR}/po/*/docs/*")
+    foreach(relative_path IN LISTS KWIN_LOCALIZED_DOCS)
+        string(REGEX REPLACE
+            "^([^/]+/docs/kcontrol/)([^/]+)(/.*)$"
+            "\\1gxde-\\2\\3"
+            gxde_relative_path
+            "${relative_path}")
+        get_filename_component(gxde_doc_dir
+            "${GXDE_DOC_PO_DIR}/${gxde_relative_path}" DIRECTORY)
+        file(MAKE_DIRECTORY "${gxde_doc_dir}")
+        file(READ "${PROJECT_SOURCE_DIR}/po/${relative_path}" gxde_doc_content)
+        string(REPLACE "help:/kcontrol/" "help:/kcontrol/gxde-"
+            gxde_doc_content "${gxde_doc_content}")
+        file(WRITE "${GXDE_DOC_PO_DIR}/${gxde_relative_path}"
+            "${gxde_doc_content}")
+    endforeach()
+    kdoctools_install("${GXDE_DOC_PO_DIR}")
 endif()
 
 add_subdirectory(data)
 add_subdirectory(kconf_update)
 add_subdirectory(src)
+
+# This fork intentionally ships only the standalone X11 window-manager
+# executable. Keep an accidental Wayland executable from silently entering the
+# default build in a future merge.
+if (TARGET kwin_wayland OR TARGET gxde-kwin_wayland)
+    message(FATAL_ERROR "The gxde-kwin_x11 project must not build a Wayland executable")
+endif()
 
 if (BUILD_TESTING)
     find_package(KWayland ${PROJECT_DEP_VERSION} CONFIG)
@@ -518,18 +572,35 @@ kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinX11DBusInterface")
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/GXDEKWinX11DBusInterface")
 configure_package_config_file(KWinX11DBusInterfaceConfig.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/KWinX11DBusInterfaceConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/GXDEKWinX11DBusInterfaceConfig.cmake"
     PATH_VARS KDE_INSTALL_DBUSINTERFACEDIR
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinX11DBusInterfaceConfig.cmake
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/GXDEKWinX11DBusInterfaceConfig.cmake
     DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 
 if (KWIN_BUILD_X11_BACKEND)
-    ecm_install_configured_files(INPUT plasma-kwin_x11.service.in @ONLY
-                DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
+    configure_file(plasma-kwin_x11.service.in
+        ${CMAKE_CURRENT_BINARY_DIR}/plasma-gxde-kwin_x11.service @ONLY)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/plasma-gxde-kwin_x11.service
+        DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
 endif()
 
 
-ki18n_install(po)
+# Translation catalogs use GXDE-prefixed domains. Generate renamed build-tree
+# copies instead of duplicating the upstream translation sources in git.
+set(GXDE_PO_DIR "${CMAKE_CURRENT_BINARY_DIR}/po-gxde")
+file(GLOB_RECURSE KWIN_TRANSLATIONS
+    RELATIVE "${PROJECT_SOURCE_DIR}/po"
+    "${PROJECT_SOURCE_DIR}/po/*.po")
+foreach(relative_path IN LISTS KWIN_TRANSLATIONS)
+    get_filename_component(po_dir "${relative_path}" DIRECTORY)
+    get_filename_component(po_name "${relative_path}" NAME)
+    file(MAKE_DIRECTORY "${GXDE_PO_DIR}/${po_dir}")
+    configure_file(
+        "${PROJECT_SOURCE_DIR}/po/${relative_path}"
+        "${GXDE_PO_DIR}/${po_dir}/gxde-${po_name}"
+        COPYONLY)
+endforeach()
+ki18n_install("${GXDE_PO_DIR}")

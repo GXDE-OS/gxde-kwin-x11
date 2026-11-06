@@ -13,7 +13,9 @@
 #cmakedefine01 KWIN_BUILD_X11
 constexpr QLatin1String KWIN_DATADIR("${KWIN_DATADIR}");
 constexpr QLatin1String KWIN_PLUGINDIR("${KWIN_PLUGINDIR}");
-constexpr QLatin1String KWIN_CONFIG("kwinrc");
+constexpr QLatin1String KWIN_CONFIG("${KWIN_CONFIG}");
+constexpr QLatin1String KWIN_RULES_CONFIG("${KWIN_RULES_CONFIG}");
+constexpr QLatin1String KWIN_OUTPUT_CONFIG("${KWIN_OUTPUT_CONFIG}");
 constexpr QLatin1String KWIN_VERSION_STRING("${PROJECT_VERSION}");
 constexpr QLatin1String XCB_VERSION_STRING("${XCB_VERSION}");
 constexpr QLatin1String KWIN_KILLER_BIN("${KWIN_KILLER_BIN}");

@@ -1,10 +1,10 @@
 ecm_setup_version(${PROJECT_VERSION}
                   VARIABLE_PREFIX KWIN
-                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinX11ConfigVersion.cmake"
+                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/GXDEKWinX11ConfigVersion.cmake"
                   SOVERSION 6
 )
 
-set(KWIN_KILLER_BIN ${CMAKE_INSTALL_FULL_LIBEXECDIR}/kwin_killer_helper_x11)
+set(KWIN_KILLER_BIN ${CMAKE_INSTALL_FULL_LIBEXECDIR}/gxde-kwin_x11_killer_helper)
 
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
 
@@ -23,15 +23,15 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 add_library(kwin SHARED)
-target_include_directories(kwin INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin-x11>")
+target_include_directories(kwin INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/${KWIN_DATADIR}>")
 set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}
    SOVERSION 6
-   OUTPUT_NAME "kwin-x11"
+   OUTPUT_NAME "${GXDE_KWIN_NAME}"
 )
 
 target_compile_definitions(kwin PRIVATE
-    -DTRANSLATION_DOMAIN=\"kwin_x11\"
+    -DTRANSLATION_DOMAIN=\"gxde-kwin_x11\"
 )
 
 target_sources(kwin PRIVATE
@@ -390,34 +390,42 @@ qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xm
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 if (KWIN_BUILD_X11 AND KWIN_BUILD_X11_BACKEND)
-    add_executable(kwin_x11 main_x11.cpp)
-    target_link_libraries(kwin_x11
+    add_executable(${GXDE_KWIN_NAME} main_x11.cpp)
+    # KCoreAddons mirrors the isolated plugin namespace below the build-tree
+    # bin directory. Keep the executable in a separate build-tree directory so
+    # bin/gxde-kwin_x11 can remain a plugin directory; installation still uses
+    # KDE_INSTALL_BINDIR and the exact gxde-kwin_x11 ELF name.
+    set_target_properties(${GXDE_KWIN_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin-executables")
+    target_link_libraries(${GXDE_KWIN_NAME}
         KWinX11Platform
         kwin
         KF6::GlobalAccel
     )
-    target_compile_definitions(kwin_x11 PRIVATE
-        -DTRANSLATION_DOMAIN=\"kwin_x11\"
+    target_compile_definitions(${GXDE_KWIN_NAME} PRIVATE
+        -DTRANSLATION_DOMAIN=\"gxde-kwin_x11\"
     )
-    kcoreaddons_target_static_plugins(kwin_x11 NAMESPACE "${KWIN_PLUGINDIR}/effects/plugins")
-    install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+    kcoreaddons_target_static_plugins(${GXDE_KWIN_NAME} NAMESPACE "${KWIN_PLUGINDIR}/effects/plugins")
+    install(TARGETS ${GXDE_KWIN_NAME} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
 
-install(TARGETS kwin EXPORT KWinX11Targets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwin EXPORT GXDEKWinX11Targets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_custom_target(
-    KWinX11DBusInterfaces
+    GXDEKWinX11DBusInterfaces
     ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kwin.VirtualKeyboard.xml
             ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KWin.TabletModeManager.xml
 )
 
 if (KWIN_BUILD_NOTIFICATIONS)
-    install(FILES kwin-x11.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
+    install(FILES kwin-x11.notifyrc
+        DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR}
+        RENAME ${GXDE_KWIN_NAME}.notifyrc)
 endif()
 
 function(export_dbus_interface file path)
-    install(FILES ${path} DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR} RENAME "kwin_x11_${file}")
+    install(FILES ${path} DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR} RENAME "${GXDE_KWIN_NAME}_${file}")
 endfunction()
 
 export_dbus_interface(org.kde.KWin.VirtualDesktopManager.xml org.kde.KWin.VirtualDesktopManager.xml)
@@ -428,10 +436,8 @@ export_dbus_interface(org.kde.KWin.Plugins.xml org.kde.KWin.Plugins.xml)
 export_dbus_interface(org.kde.kwin.VirtualKeyboard.xml ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kwin.VirtualKeyboard.xml)
 export_dbus_interface(org.kde.KWin.TabletModeManager.xml ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KWin.TabletModeManager.xml)
 
-install(EXPORT KWinX11Targets DESTINATION "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinX11" FILE KWinX11Targets.cmake NAMESPACE KWinX11:: )
-
 if (KWIN_BUILD_X11)
-    install(FILES atoms.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin-x11 COMPONENT Devel)
+    install(FILES atoms.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/${KWIN_DATADIR} COMPONENT Devel)
 endif()
 
 install(FILES
@@ -506,7 +512,7 @@ install(FILES
     xdgshellintegration.h
     xdgshellwindow.h
     xkb.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin-x11 COMPONENT Devel)
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/${KWIN_DATADIR} COMPONENT Devel)
 
 install(FILES
     core/colorlut3d.h
@@ -541,7 +547,7 @@ install(FILES
     core/session_logind.h
     core/session_noop.h
     core/shmgraphicsbufferallocator.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin-x11/core COMPONENT Devel)
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/${KWIN_DATADIR}/core COMPONENT Devel)
 
 install(FILES
     utils/c_ptr.h
@@ -565,7 +571,7 @@ install(FILES
     utils/version.h
     utils/vsyncmonitor.h
     utils/xcbutils.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin-x11/utils COMPONENT Devel)
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/${KWIN_DATADIR}/utils COMPONENT Devel)
 
 install(FILES
     effect/animationeffect.h
@@ -579,7 +585,7 @@ install(FILES
     effect/quickeffect.h
     effect/timeline.h
     effect/xcb.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin-x11/effect COMPONENT Devel)
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/${KWIN_DATADIR}/effect COMPONENT Devel)
 
 install(FILES
     opengl/abstract_opengl_context_attribute_builder.h
@@ -602,7 +608,7 @@ install(FILES
     opengl/glutils.h
     opengl/glvertexbuffer.h
     opengl/openglcontext.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin-x11/opengl COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/${KWIN_DATADIR}/opengl COMPONENT Devel
 )
 
 install(FILES
@@ -632,20 +638,23 @@ install(FILES
     scene/workspacescene.h
     scene/workspacescene_opengl.h
     scene/workspacescene_qpainter.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin-x11/scene COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/${KWIN_DATADIR}/scene COMPONENT Devel
 )
 
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinX11")
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/GXDEKWinX11")
 
-install(FILES  "${CMAKE_CURRENT_BINARY_DIR}/KWinX11Config.cmake"
-               "${CMAKE_CURRENT_BINARY_DIR}/KWinX11ConfigVersion.cmake"
+install(FILES  "${CMAKE_CURRENT_BINARY_DIR}/GXDEKWinX11Config.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/GXDEKWinX11ConfigVersion.cmake"
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
         COMPONENT Devel )
 
 configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/KWinX11Config.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/KWinX11Config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/GXDEKWinX11Config.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-install(EXPORT KWinX11Targets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KWinX11Targets.cmake NAMESPACE KWinX11:: )
+install(EXPORT GXDEKWinX11Targets
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+    FILE GXDEKWinX11Targets.cmake
+    NAMESPACE GXDEKWinX11::)

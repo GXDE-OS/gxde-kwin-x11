@@ -1,6 +1,6 @@
 ########### next target ###############
 # KI18N Translation Domain for this library
-add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwm_x11\")
+add_definitions(-DTRANSLATION_DOMAIN=\"gxde-kcmkwm_x11\")
 
 set(kcm_kwinoptions_x11_PART_SRCS
     main.cpp
@@ -27,8 +27,8 @@ kcmutils_generate_module_data(
 kconfig_add_kcfg_files(kcm_kwinoptions_x11_PART_SRCS kwinoptions_settings.kcfgc GENERATE_MOC)
 kconfig_add_kcfg_files(kcm_kwinoptions_x11_PART_SRCS kwinoptions_kdeglobals_settings.kcfgc GENERATE_MOC)
 
-qt_add_dbus_interface(kcm_kwinoptions_x11_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
+qt_add_dbus_interface(kcm_kwinoptions_x11_PART_SRCS ${PROJECT_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
 
-kcoreaddons_add_plugin(kcm_kwinoptions_x11 SOURCES ${kcm_kwinoptions_x11_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
-kcmutils_generate_desktop_file(kcm_kwinoptions_x11)
-target_link_libraries(kcm_kwinoptions_x11 kwin Qt::DBus KF6::KCMUtils KF6::I18n KF6::WindowSystem)
+kcoreaddons_add_plugin(gxde-kcm_kwinoptions_x11 SOURCES ${kcm_kwinoptions_x11_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
+gxde_generate_kcm_desktop_file(gxde-kcm_kwinoptions_x11 kcm_kwinoptions_x11.json)
+target_link_libraries(gxde-kcm_kwinoptions_x11 kwin Qt::DBus KF6::KCMUtils KF6::I18n KF6::WindowSystem)

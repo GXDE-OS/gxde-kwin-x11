@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-// read additional window rules and add them to kwinrulesrc
+// read additional window rules and add them to the GXDE KWin rules file
 
 #include "config-kwin.h"
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QCoreApplication::setApplicationName("kwin_update_default_rules");
+    QCoreApplication::setApplicationName("gxde-kwin_x11_update_default_rules");
 
     QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QString("/default_rules/%1").arg(argv[1]));
     if (file.isEmpty()) {
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
         return 1;
     }
     KConfig src_cfg(file);
-    KConfig dest_cfg(QStringLiteral("kwinrulesrc"), KConfig::NoGlobals);
+    KConfig dest_cfg(KWIN_RULES_CONFIG, KConfig::NoGlobals);
     KConfigGroup scg(&src_cfg, QStringLiteral("General"));
     KConfigGroup dcg(&dest_cfg, QStringLiteral("General"));
     int count = scg.readEntry("count", 0);

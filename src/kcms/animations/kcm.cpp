@@ -101,7 +101,7 @@ void AnimationsKCM::configure(const QString &pluginId, QQuickItem *context) cons
 
 QVariantMap AnimationsKCM::effectsKCMData() const
 {
-    if (KService::Ptr kcm = KService::serviceByStorageId(QStringLiteral("kcm_kwin_effects_x11"))) {
+    if (KService::Ptr kcm = KService::serviceByStorageId(QStringLiteral("gxde-kcm_kwin_effects_x11"))) {
         QVariantMap data;
         data["icon"] = kcm->icon();
         data["name"] = kcm->name();
@@ -113,7 +113,7 @@ QVariantMap AnimationsKCM::effectsKCMData() const
 
 void AnimationsKCM::launchEffectsKCM() const
 {
-    QProcess::startDetached(QStringLiteral("systemsettings"), QStringList{QStringLiteral("kcm_kwin_effects_x11")});
+    QProcess::startDetached(QStringLiteral("systemsettings"), QStringList{QStringLiteral("gxde-kcm_kwin_effects_x11")});
 }
 
 void AnimationsKCM::load()

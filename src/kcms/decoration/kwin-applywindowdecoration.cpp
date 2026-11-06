@@ -22,10 +22,10 @@ int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     int exitCode{0};
-    QCoreApplication::setApplicationName(QStringLiteral("kwin-applywindowdecoration"));
+    QCoreApplication::setApplicationName(QStringLiteral("gxde-kwin-applywindowdecoration-x11"));
     QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("kde.org"));
-    KLocalizedString::setApplicationDomain(QByteArrayLiteral("kwin-applywindowdecoration"));
+    KLocalizedString::setApplicationDomain(QByteArrayLiteral("gxde-kcm_kwindecoration_x11"));
 
     QCommandLineParser *parser = new QCommandLineParser;
     parser->addHelpOption();

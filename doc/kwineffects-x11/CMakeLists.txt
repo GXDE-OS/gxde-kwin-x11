@@ -1,2 +1,2 @@
 ########### install files ###############
-kdoctools_create_handbook(index.docbook INSTALL_DESTINATION ${KDE_INSTALL_DOCBUNDLEDIR}/en SUBDIR kcontrol/kwineffects-x11)
+kdoctools_create_handbook(index.docbook INSTALL_DESTINATION ${KDE_INSTALL_DOCBUNDLEDIR}/en SUBDIR kcontrol/gxde-kwineffects-x11)

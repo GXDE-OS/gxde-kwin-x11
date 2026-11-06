@@ -1,5 +1,5 @@
 # KI18N Translation Domain for this library.
-add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_effects_x11\")
+add_definitions(-DTRANSLATION_DOMAIN=\"gxde-kcm_kwin_effects_x11\")
 
 ########### next target ###############
 
@@ -9,9 +9,12 @@ set(kcm_kwin_effects_x11_PART_SRCS
     desktopeffectsdata.cpp
 )
 
-kcmutils_add_qml_kcm(kcm_kwin_effects_x11 SOURCES ${kcm_kwin_effects_x11_PART_SRCS})
+kcmutils_add_qml_kcm(gxde-kcm_kwin_effects_x11
+    SOURCES ${kcm_kwin_effects_x11_PART_SRCS}
+    DISABLE_DESKTOP_FILE_GENERATION)
+gxde_generate_kcm_desktop_file(gxde-kcm_kwin_effects_x11 kcm_kwin_effects_x11.json)
 
-target_link_libraries(kcm_kwin_effects_x11 PRIVATE
+target_link_libraries(gxde-kcm_kwin_effects_x11 PRIVATE
     Qt::DBus
     Qt::Quick
 
@@ -24,4 +27,4 @@ target_link_libraries(kcm_kwin_effects_x11 PRIVATE
     kcmkwincommon
 )
 
-install(FILES kwineffect.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR} RENAME kwineffect-x11.knsrc)
+install(FILES kwineffect.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR} RENAME gxde-kwineffect-x11.knsrc)

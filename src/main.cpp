@@ -91,7 +91,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     , m_eventFilter(new XcbEventFilter())
 #endif
     , m_configLock(false)
-    , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
+    , m_config(KSharedConfig::openConfig(KWIN_CONFIG))
     , m_kxkbConfig()
     , m_operationMode(mode)
 {
@@ -181,8 +181,8 @@ bool Application::wasCrash()
 
 void Application::createAboutData()
 {
-    KAboutData aboutData(QStringLiteral("kwin"), // The program name used internally
-                         i18n("KWin"), // A displayable program name string
+    KAboutData aboutData(QStringLiteral("gxde-kwin_x11"), // The program name used internally
+                         i18n("GXDE KWin X11"), // A displayable program name string
                          KWIN_VERSION_STRING, // The program version string
                          i18n("KDE window manager"), // Short description of what the app does
                          KAboutLicense::GPL, // The license this code is released under
@@ -238,7 +238,7 @@ void Application::setupMalloc()
 
 void Application::setupLocalizedString()
 {
-    KLocalizedString::setApplicationDomain(QByteArrayLiteral("kwin_x11"));
+    KLocalizedString::setApplicationDomain(QByteArrayLiteral("gxde-kwin_x11"));
 }
 
 void Application::createWorkspace()

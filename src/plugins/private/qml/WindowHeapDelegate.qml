@@ -11,7 +11,7 @@ import QtQuick.Window
 import Qt5Compat.GraphicalEffects
 import org.kde.kirigami as Kirigami
 import org.kde.kwin as KWinComponents
-import org.kde.kwin_x11.private.effects
+import org.gxde.kwin_x11.private.effects
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.ksvg 1.0 as KSvg
@@ -226,7 +226,7 @@ ExpoCell {
             anchors.fill: thumbSource
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            text: i18nd("kwin_x11", "Drag Down To Close")
+            text: i18nd("gxde-kwin_x11", "Drag Down To Close")
             visible: !thumb.activeHidden && touchDragHandler.active
             background: Rectangle {
                 anchors.centerIn: parent
@@ -370,7 +370,7 @@ ExpoCell {
             active: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active && !returnAnimation.running
 
             sourceComponent: PC3.Button {
-                text: i18ndc("kwin_x11", "@info:tooltip as in: 'close this window'", "Close window")
+                text: i18ndc("gxde-kwin_x11", "@info:tooltip as in: 'close this window'", "Close window")
                 icon.name: "window-close"
                 display: PC3.AbstractButton.IconOnly
 

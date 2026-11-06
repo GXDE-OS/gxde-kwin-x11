@@ -24,14 +24,14 @@ int main(int argc, char **argv)
     // Remove old toggle action shortcut (that activates the effect)
     QAction toggleAction;
     toggleAction.setObjectName(QStringLiteral("Toggle"));
-    toggleAction.setProperty("componentName", QStringLiteral("kwin"));
+    toggleAction.setProperty("componentName", QStringLiteral("gxde-kwin_x11"));
     toggleAction.setProperty("componentDisplayName", QStringLiteral("KWin"));
 
     KGlobalAccel::self()->setShortcut(&toggleAction, {QKeySequence()}, KGlobalAccel::NoAutoloading);
     KGlobalAccel::self()->removeAllShortcuts(&toggleAction);
 
     // Disable effect
-    auto config = KSharedConfig::openConfig(QStringLiteral("kwinrc"));
+    auto config = KSharedConfig::openConfig(QStringLiteral("gxde-kwin_x11rc"));
     KConfigGroup pluginsGroup = config->group(QStringLiteral("Plugins"));
 
     if (pluginsGroup.exists() && pluginsGroup.hasKey(QStringLiteral("showpaintEnabled"))) {

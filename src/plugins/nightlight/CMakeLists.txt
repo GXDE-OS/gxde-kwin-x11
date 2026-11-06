@@ -32,4 +32,4 @@ target_link_libraries(nightlight
     KF6::I18n
 )
 
-install(FILES org.kde.KWin.NightLight.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR} RENAME "kwin_x11_org.kde.KWin.NightLight.xml")
+install(FILES org.kde.KWin.NightLight.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR} RENAME "${GXDE_KWIN_NAME}_org.kde.KWin.NightLight.xml")

@@ -9,7 +9,7 @@
 
 int main()
 {
-    auto config = KSharedConfig::openConfig(QStringLiteral("kwinrc"));
+    auto config = KSharedConfig::openConfig(QStringLiteral("gxde-kwin_x11rc"));
 
     KConfigGroup windows = config->group(QStringLiteral("Windows"));
     if (!windows.exists()) {

@@ -8,7 +8,7 @@ import QtQuick
 import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
-import org.kde.kwin_x11.private.effects
+import org.gxde.kwin_x11.private.effects
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.ksvg 1.0 as KSvg
 import org.kde.plasma.components 3.0 as PlasmaComponents
@@ -148,7 +148,7 @@ FocusScope {
         }
         contentItem: RowLayout {
             PlasmaComponents.Label {
-                text: i18nd("kwin_x11","Padding:")
+                text: i18nd("gxde-kwin_x11","Padding:")
             }
             PlasmaComponents.SpinBox {
                 from: 0
@@ -158,7 +158,7 @@ FocusScope {
             }
             PlasmaComponents.Button {
                 icon.name: "document-open"
-                text: i18nd("kwin_x11","Load Layout…")
+                text: i18nd("gxde-kwin_x11","Load Layout…")
                 onClicked: loadLayoutDialog.open()
                 // This mouse area is for fitts law
                 MouseArea {
@@ -268,7 +268,7 @@ FocusScope {
             }
             PlasmaComponents.Button {
                 Layout.alignment: Qt.AlignRight
-                text: i18nd("kwin_x11","Close")
+                text: i18nd("gxde-kwin_x11","Close")
                 onClicked: loadLayoutDialog.close()
             }
         }

@@ -3,6 +3,7 @@
 
 function(kwin_add_kpackage_structure dir file)
     kcoreaddons_add_plugin(kwin_${dir}_x11 SOURCES ${file} INSTALL_NAMESPACE kf6/packagestructure)
+    set_target_properties(kwin_${dir}_x11 PROPERTIES OUTPUT_NAME "gxde-kwin_${dir}_x11")
     target_link_libraries(kwin_${dir}_x11 KF6::Package)
 endfunction()
 

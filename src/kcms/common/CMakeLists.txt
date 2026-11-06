@@ -1,12 +1,12 @@
 # KI18N Translation Domain for this library
-add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwincommon_x11\")
+add_definitions(-DTRANSLATION_DOMAIN=\"gxde-kcmkwincommon_x11\")
 
 set(kcmkwincommon_SRC
     effectsmodel.cpp
 )
 
 qt_add_dbus_interface(kcmkwincommon_SRC
-    ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface
+    ${PROJECT_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface
 )
 
 add_library(kcmkwincommon SHARED ${kcmkwincommon_SRC})
@@ -25,7 +25,7 @@ target_link_libraries(kcmkwincommon
 set_target_properties(kcmkwincommon PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 6
-    OUTPUT_NAME "kcmkwincommon-x11"
+    OUTPUT_NAME "gxde-kcmkwincommon_x11"
 )
 
 install(TARGETS kcmkwincommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)

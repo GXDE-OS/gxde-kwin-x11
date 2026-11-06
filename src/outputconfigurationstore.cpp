@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "outputconfigurationstore.h"
+#include "config-kwin.h"
 #include "core/iccprofile.h"
 #include "core/inputdevice.h"
 #include "core/output.h"
@@ -657,7 +658,7 @@ double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) c
 
 void OutputConfigurationStore::load()
 {
-    const QString jsonPath = QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"));
+    const QString jsonPath = QStandardPaths::locate(QStandardPaths::ConfigLocation, KWIN_OUTPUT_CONFIG);
     if (jsonPath.isEmpty()) {
         return;
     }
@@ -1143,7 +1144,7 @@ void OutputConfigurationStore::save()
     setups["data"] = setupData;
     array.append(setups);
 
-    const QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/kwinoutputconfig.json";
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + KWIN_OUTPUT_CONFIG;
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly)) {
         qCWarning(KWIN_CORE, "Couldn't open output config file %s", qPrintable(path));

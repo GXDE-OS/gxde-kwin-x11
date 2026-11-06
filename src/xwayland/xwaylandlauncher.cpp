@@ -268,7 +268,7 @@ void XwaylandLauncher::handleXwaylandFinished(int exitCode, QProcess::ExitStatus
 
 #if KWIN_BUILD_NOTIFICATIONS
     auto notification = new KNotification(QStringLiteral("xwaylandcrash"));
-    notification->setComponentName(QStringLiteral("kwin-x11"));
+    notification->setComponentName(QStringLiteral("gxde-kwin_x11"));
     notification->setText(i18n("Xwayland has crashed"));
     notification->sendEvent();
 #endif

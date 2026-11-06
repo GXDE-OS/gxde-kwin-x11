@@ -16,7 +16,7 @@
 
 KWinScriptsData::KWinScriptsData(QObject *parent)
     : KCModuleData(parent)
-    , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
+    , m_kwinConfig(KSharedConfig::openConfig("gxde-kwin_x11rc"))
 {
 }
 

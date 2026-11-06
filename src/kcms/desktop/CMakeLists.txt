@@ -1,5 +1,5 @@
 # KI18N Translation Domain for this library.
-add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_virtualdesktops_x11\")
+add_definitions(-DTRANSLATION_DOMAIN=\"gxde-kcm_kwin_virtualdesktops_x11\")
 
 ########### next target ###############
 
@@ -13,9 +13,12 @@ set(kcm_kwin_virtualdesktops_x11_PART_SRCS
 
 kconfig_add_kcfg_files(kcm_kwin_virtualdesktops_x11_PART_SRCS virtualdesktopssettings.kcfgc GENERATE_MOC)
 
-kcmutils_add_qml_kcm(kcm_kwin_virtualdesktops_x11 SOURCES ${kcm_kwin_virtualdesktops_x11_PART_SRCS})
+kcmutils_add_qml_kcm(gxde-kcm_kwin_virtualdesktops_x11
+    SOURCES ${kcm_kwin_virtualdesktops_x11_PART_SRCS}
+    DISABLE_DESKTOP_FILE_GENERATION)
+gxde_generate_kcm_desktop_file(gxde-kcm_kwin_virtualdesktops_x11 kcm_kwin_virtualdesktops_x11.json)
 
-target_link_libraries(kcm_kwin_virtualdesktops_x11 PRIVATE
+target_link_libraries(gxde-kcm_kwin_virtualdesktops_x11 PRIVATE
     Qt::DBus
 
     KF6::I18n

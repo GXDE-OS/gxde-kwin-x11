@@ -1,10 +1,11 @@
 [Unit]
-Description=KDE Window Manager
+Description=GXDE KWin X11 Window Manager
 After=plasma-kcminit.service
 PartOf=graphical-session.target
+Conflicts=plasma-kwin_x11.service plasma-kwin_wayland.service
 
 [Service]
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_x11 --replace
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/@GXDE_KWIN_NAME@ --replace
 BusName=org.kde.KWin
 Slice=session.slice
 Restart=on-failure

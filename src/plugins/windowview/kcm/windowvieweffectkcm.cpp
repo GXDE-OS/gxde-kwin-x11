@@ -31,7 +31,7 @@ WindowViewEffectConfig::WindowViewEffectConfig(QObject *parent, const KPluginMet
     WindowViewConfig::instance(KWIN_CONFIG);
     addConfig(WindowViewConfig::self(), widget());
 
-    auto actionCollection = new KActionCollection(widget(), QStringLiteral("kwin"));
+    auto actionCollection = new KActionCollection(widget(), QStringLiteral("gxde-kwin_x11"));
 
     actionCollection->setComponentDisplayName(i18n("KWin"));
     actionCollection->setConfigGroup(QStringLiteral("windowview"));

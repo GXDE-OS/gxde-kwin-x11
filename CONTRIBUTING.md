@@ -37,7 +37,7 @@ Most window management stuff (layouting, movement, properties, communication bet
 
 ### Window Effects
 
-Window effects are located in `src/plugins`, one effect plugin per folder.  Folder `src/plugins/private` contains the plugin (`org.kde.kwin_x11.private.effects`) that exposes layouting properties and `WindowHeap.qml` for QML effects.  Not everything here is an effect as exposed in the configuration UI, such as the colour picker in `src/plugins/colorpicker`.
+Window effects are located in `src/plugins`, one effect plugin per folder.  Folder `src/plugins/private` contains the plugin (`org.gxde.kwin_x11.private.effects`) that exposes layouting properties and `WindowHeap.qml` for QML effects.  Not everything here is an effect as exposed in the configuration UI, such as the colour picker in `src/plugins/colorpicker`.
 
 Of note, the Effects QML engine is shared with the Scripting components (see `src/scripting`).
 
@@ -87,39 +87,30 @@ make
 
 People hacking on much KDE software may want to set up [kdesrc-build](https://invent.kde.org/sdk/kdesrc-build).
 
-Once built, you can either install it over your system KWin (not recommended) or run it from the build directory directly.
+Once built, you can install it alongside system KWin or run it from the build directory directly.
 
 Running it from your build directory looks like this:
 ```bash
 # from the root of your build directory
 
 source prefix.sh
-cd bin
 
-# for wayland, starts nested session: with console
+# The executable and the isolated plugin tree deliberately use separate
+# build directories.
+export QT_PLUGIN_PATH="$(pwd)/bin${QT_PLUGIN_PATH:+:$QT_PLUGIN_PATH}"
+cd bin-executables
 
-env QT_PLUGIN_PATH="$(pwd)":"$QT_PLUGIN_PATH" dbus-run-session ./kwin_wayland --xwayland konsole
+# Replaces the current X11 window-manager instance:
 
-# or for x11, replaces current kwin instance:
-
-env QT_PLUGIN_PATH="$(pwd)":"$QT_PLUGIN_PATH" ./kwin_x11 --replace
+./gxde-kwin_x11 --replace
 
 ```
 
 QT_PLUGIN_PATH tells Qt to load KWin's plugins from the build directory, and not from your system KWin.
 
-The dbus-run-session is needed to prevent the nested KWin instance from conflicting with your session KWin instance when exporting objects onto the bus, or with stuff like global shortcuts.
-
-If you need to run a whole Wayland plasma session, you should install a development session by first building [plasma-workspace](https://invent.kde.org/plasma/plasma-workspace) and executing the `login-sessions/install-sessions.sh` in the build directory. This can be done using kdesrc-build.
-
-```bash
-kdesrc-build plasma-workspace
-# assuming the root directory for kdesrc-build is ~/kde
-bash ~/kde/build/plasma-workspace/login-sessions/install-sessions.sh
-```
-Then you can select the develop session in the sddm login screen.
-
-You can look up the current boot kwin log via `journalctl --user-unit plasma-kwin_wayland --boot 0`.
+This fork intentionally does not build a Wayland compositor executable.
+You can inspect its session log with
+`journalctl --user-unit plasma-gxde-kwin_x11 --boot 0`.
 
 ## Using A Debugger
 

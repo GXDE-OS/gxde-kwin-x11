@@ -100,7 +100,7 @@ void TabletInputRedirection::init()
     connect(input(), &InputRedirection::deviceRemoved, this, &TabletInputRedirection::removeDevice);
 
     auto tabletNextOutput = new QAction(this);
-    tabletNextOutput->setProperty("componentName", QStringLiteral("kwin"));
+    tabletNextOutput->setProperty("componentName", QStringLiteral("gxde-kwin_x11"));
     tabletNextOutput->setText(i18n("Move the tablet to the next output"));
     tabletNextOutput->setObjectName(QStringLiteral("Move Tablet to Next Output"));
     KGlobalAccel::setGlobalShortcut(tabletNextOutput, QList<QKeySequence>());

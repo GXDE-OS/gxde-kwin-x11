@@ -1,4 +1,4 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"kcm_animations_x11\")
+add_definitions(-DTRANSLATION_DOMAIN=\"gxde-kcm_animations_x11\")
 
 set(kcm_animations_x11_PART_SRCS
     kcm.cpp
@@ -6,11 +6,14 @@ set(kcm_animations_x11_PART_SRCS
     effectssubsetmodel.cpp
 )
 
-kcmutils_add_qml_kcm(kcm_animations_x11 SOURCES ${kcm_animations_x11_PART_SRCS})
+kcmutils_add_qml_kcm(gxde-kcm_animations_x11
+    SOURCES ${kcm_animations_x11_PART_SRCS}
+    DISABLE_DESKTOP_FILE_GENERATION)
+gxde_generate_kcm_desktop_file(gxde-kcm_animations_x11 kcm_animations_x11.json)
 
-kconfig_add_kcfg_files(kcm_animations_x11 animationskdeglobalssettings.kcfgc GENERATE_MOC)
+kconfig_add_kcfg_files(gxde-kcm_animations_x11 animationskdeglobalssettings.kcfgc GENERATE_MOC)
 
-target_link_libraries(kcm_animations_x11 PRIVATE
+target_link_libraries(gxde-kcm_animations_x11 PRIVATE
     Qt::DBus
     Qt::Quick
     KF6::ConfigGui

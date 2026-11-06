@@ -102,7 +102,7 @@
         "Name[zh_CN]": "窗口装饰",
         "Name[zh_TW]": "視窗裝飾"
     },
-    "X-DocPath": "kcontrol/kwindecoration-x11/index.html",
+    "X-DocPath": "kcontrol/gxde-kwindecoration-x11/index.html",
     "X-KDE-Keywords": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,shadow",
     "X-KDE-Keywords[ar]": "كوين,نافذة,مدير,حدود,نمط,موضوع,نظرة,إحساس,تخطيط,زر,مقبض,حافة,KWM,ديكور,زخارف النوافذ,شريط العنوان,أزرار النافذة,حدود النافذة,الجلد,الظل",
     "X-KDE-Keywords[az]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,shadow,kwin, pəncərə, menecer, sərhəd, üslub, mövzu, görünüş, hiss, düzülüş, düymə, tutacaq, kənar, kwm,dekorasiya, pəncərə bəzəkləri, başlıq paneli, pəncərə düymələri, pəncərə sərhədi, dəri, kölgə",

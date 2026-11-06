@@ -30,7 +30,7 @@ OverviewEffectConfig::OverviewEffectConfig(QObject *parent, const KPluginMetaDat
     OverviewConfig::instance(KWIN_CONFIG);
     addConfig(OverviewConfig::self(), widget());
 
-    auto actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    auto actionCollection = new KActionCollection(this, QStringLiteral("gxde-kwin_x11"));
 
     actionCollection->setComponentDisplayName(i18n("KWin"));
     actionCollection->setConfigGroup(QStringLiteral("Overview"));

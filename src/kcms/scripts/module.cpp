@@ -35,7 +35,7 @@ Module::Module(QObject *parent, const KPluginMetaData &data)
     connect(m_model, &KPluginModel::defaulted, this, [this](bool defaulted) {
         setRepresentsDefaults(defaulted);
     });
-    m_model->setConfig(KSharedConfig::openConfig("kwinrc")->group(QStringLiteral("Plugins")));
+    m_model->setConfig(KSharedConfig::openConfig("gxde-kwin_x11rc")->group(QStringLiteral("Plugins")));
 }
 
 void Module::onGHNSEntriesChanged()
