@@ -1,0 +1,21 @@
+# The desktop files are KCM launchers. systemsettings is deliberately a
+# Recommends, matching the upstream KWin package split.
+gxde-kwin-x11: desktop-command-not-in-package systemsettings [usr/share/applications/gxde-kcm_*.desktop]
+gxde-kwin-x11: desktop-command-not-in-package systemsettings [usr/share/applications/gxde-kwincompositing_x11.desktop]
+
+# This is a private helper library for the packaged KCM plugins. It has no
+# public headers or supported ABI, so it stays in the runtime package.
+gxde-kwin-x11: package-name-doesnt-match-sonames libgxde-kcmkwincommon-x11-6
+gxde-kwin-x11: lacks-unversioned-link-to-shared-library example: usr/lib/*/libgxde-kcmkwincommon_x11.so [usr/lib/*/libgxde-kcmkwincommon_x11.so.*]
+gxde-kwin-x11: no-symbols-control-file usr/lib/*/libgxde-kcmkwincommon_x11.so.6.*
+
+# Upstream KWin does not provide a command-line manual page for the window
+# manager executable either.
+gxde-kwin-x11: no-manual-page [usr/bin/gxde-kwin_x11]
+
+# The nested directory is intentional: it isolates this fork's Qt plugins
+# from the distribution KWin plugin namespace.
+gxde-kwin-x11: repeated-path-segment plugins [usr/lib/*/qt6/plugins/gxde-kwin_x11/plugins/]
+
+# GXDE packages are released outside the Debian BTS.
+gxde-kwin-x11: initial-upload-closes-no-bugs

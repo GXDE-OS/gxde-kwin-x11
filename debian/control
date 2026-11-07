@@ -1,5 +1,5 @@
 Source: gxde-kwin-x11
-Section: gxde
+Section: x11
 Priority: optional
 Maintainer: CharOfString <root@charofstring.cc>
 Build-Depends:

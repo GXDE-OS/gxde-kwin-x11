@@ -1,0 +1,6 @@
+# This is a large C++ ABI consumed only by the same-version GXDE packages;
+# maintaining a Debian symbols file would not provide a stable ABI promise.
+libgxde-kwin-x11-6: no-symbols-control-file usr/lib/*/libgxde-kwin_x11.so.6.*
+
+# GXDE packages are released outside the Debian BTS.
+libgxde-kwin-x11-6: initial-upload-closes-no-bugs

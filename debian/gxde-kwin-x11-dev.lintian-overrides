@@ -1,0 +1,2 @@
+# GXDE packages are released outside the Debian BTS.
+gxde-kwin-x11-dev: initial-upload-closes-no-bugs
