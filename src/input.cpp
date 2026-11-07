@@ -3445,6 +3445,13 @@ void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection dire
 #endif
 }
 
+#if KWIN_BUILD_GLOBALSHORTCUTS && !HAVE_KGLOBALACCELD_INTERFACE_METHOD
+void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
+{
+    m_shortcuts->setKGlobalAccelInterface(interface);
+}
+#endif
+
 void InputRedirection::warpPointer(const QPointF &pos)
 {
     m_pointer->warp(pos);

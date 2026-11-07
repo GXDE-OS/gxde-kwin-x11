@@ -1,4 +1,4 @@
-gxde-kwin-x11 (6.7.6-1) unstable; urgency=medium
+gxde-kwin-x11 (4:6.7.6-1) unstable; urgency=medium
 
   * Initial Debian release.
 

@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "config-kwin.h"
 #include "options.h"
 
 #include <KDecoration3/Private/DecoratedWindowPrivate>
@@ -23,7 +24,13 @@ class Window;
 namespace Decoration
 {
 
-class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV3
+#if HAVE_KDECORATION3_DECORATED_WINDOW_PRIVATE_V3
+using DecoratedWindowPrivateBase = KDecoration3::DecoratedWindowPrivateV3;
+#else
+using DecoratedWindowPrivateBase = KDecoration3::DecoratedWindowPrivateV2;
+#endif
+
+class DecoratedWindowImpl : public QObject, public DecoratedWindowPrivateBase
 {
     Q_OBJECT
 public:
@@ -78,7 +85,9 @@ public:
 
     void showApplicationMenu(int actionId) override;
 
+#if HAVE_KDECORATION3_DECORATED_WINDOW_PRIVATE_V3
     void popup(const KDecoration3::Positioner &positioner, QMenu *menu) override;
+#endif
 
     Window *window()
     {

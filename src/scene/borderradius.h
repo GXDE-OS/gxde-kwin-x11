@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "config-kwin.h"
 #include "kwin_export.h"
 
 #include <QRegion>
@@ -42,7 +43,9 @@ public:
 
     QVector4D toVector() const;
 
+#if HAVE_KDECORATION3_BORDER_GEOMETRY
     static BorderRadius from(const KDecoration3::BorderRadius &radius);
+#endif
 
 private:
     qreal m_topLeft = 0;

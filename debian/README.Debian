@@ -1,13 +1,20 @@
 gxde-kwin-x11 for Debian
 ------------------------
 
-This fork is packaged under its own namespace and does not declare Conflicts,
-Breaks or Replaces against the distribution KWin packages. It is intended to
-be co-installable with both the X11 and Wayland variants of upstream KWin.
+The runtime binary package is named gxde-kwin-x11-6 so that it does not replace
+the existing GXDE 5.x package named gxde-kwin-x11. The fork's files are under
+their own namespace and do not conflict with the existing KWin files.
+
+Debian's libkdecorations3-6 package declares a Breaks against KDecoration 2.
+This source therefore emits libgxde-kdecorations3-6 with the same Qt 6 public
+library but without that cross-major-version Breaks. It still conflicts with
+the distribution libkdecorations3-6 package because both own the same Qt 6
+library file. The KDecoration 2 runtime remains installed and usable by the
+existing GXDE window manager.
 
 The source still compiles shared Wayland protocol and support code used by the
 KWin core library. This is not a Wayland compositor build: neither
 kwin_wayland nor gxde-kwin_wayland is a CMake target or an installed file.
 
-The package build disables upstream tests and explicitly enables only the
-gxde-kwin_x11 executable backend.
+The package build disables upstream tests and screen-locker integration, then
+explicitly enables only the gxde-kwin_x11 executable backend.

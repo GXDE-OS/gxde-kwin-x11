@@ -5,7 +5,7 @@ output="$(xvfb-run -a gxde-kwin_x11 --version)"
 printf '%s\n' "$output"
 printf '%s\n' "$output" | grep -F 'gxde-kwin_x11 6.7.6'
 
-if dpkg-query -L gxde-kwin-x11 | grep -Eq '/(gxde-kwin_wayland|kwin_wayland)$'; then
-    echo 'unexpected Wayland compositor executable in gxde-kwin-x11' >&2
+if dpkg-query -L gxde-kwin-x11-6 | grep -Eq '/(gxde-kwin_wayland|kwin_wayland)$'; then
+    echo 'unexpected Wayland compositor executable in gxde-kwin-x11-6' >&2
     exit 1
 fi

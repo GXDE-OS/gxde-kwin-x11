@@ -6,6 +6,7 @@
 #pragma once
 
 #include "../../../decorations/decorationpalette.h"
+#include "config-kwin.h"
 
 #include <KDecoration3/Private/DecoratedWindowPrivate>
 #include <QObject>
@@ -18,7 +19,13 @@ namespace KDecoration3
 {
 namespace Preview
 {
-class PreviewClient : public QObject, public DecoratedWindowPrivateV3
+#if HAVE_KDECORATION3_DECORATED_WINDOW_PRIVATE_V3
+using DecoratedWindowPrivateBase = DecoratedWindowPrivateV3;
+#else
+using DecoratedWindowPrivateBase = DecoratedWindowPrivateV2;
+#endif
+
+class PreviewClient : public QObject, public DecoratedWindowPrivateBase
 {
     Q_OBJECT
     QML_ANONYMOUS
@@ -101,7 +108,9 @@ public:
 
     void showApplicationMenu(int actionId) override;
 
+#if HAVE_KDECORATION3_DECORATED_WINDOW_PRIVATE_V3
     void popup(const KDecoration3::Positioner &positioner, QMenu *menu) override;
+#endif
 
     void setCaption(const QString &caption);
     void setActive(bool active);

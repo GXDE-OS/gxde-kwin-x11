@@ -58,9 +58,11 @@ QRectF BorderOutline::deflate(const QRectF &rect) const
     return rect.adjusted(m_thickness, m_thickness, -m_thickness, -m_thickness);
 }
 
+#if HAVE_KDECORATION3_BORDER_GEOMETRY
 BorderOutline BorderOutline::from(const KDecoration3::BorderOutline &outline)
 {
     return BorderOutline(outline.thickness(), outline.color(), BorderRadius::from(outline.radius()));
 }
+#endif
 
 } // namespace KWin

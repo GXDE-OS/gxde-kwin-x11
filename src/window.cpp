@@ -2813,11 +2813,13 @@ void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
                 updateDecorationInputShape();
             }
         });
+#if HAVE_KDECORATION3_BORDER_GEOMETRY
         connect(decoration.get(), &KDecoration3::Decoration::borderRadiusChanged, this, [this]() {
             if (!isDeleted()) {
                 updateDecorationBorderRadius();
             }
         });
+#endif
     }
     m_decoration.decoration = decoration;
     updateDecorationInputShape();
@@ -2845,8 +2847,10 @@ void Window::updateDecorationBorderRadius()
 {
     if (!isDecorated()) {
         setBorderRadius(BorderRadius());
+#if HAVE_KDECORATION3_BORDER_GEOMETRY
     } else {
         setBorderRadius(BorderRadius::from(decoration()->borderRadius()));
+#endif
     }
 }
 

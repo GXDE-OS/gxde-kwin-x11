@@ -104,9 +104,11 @@ QRegion BorderRadius::clip(const QRegion &region, const QRectF &bounds) const
     return clipped;
 }
 
+#if HAVE_KDECORATION3_BORDER_GEOMETRY
 BorderRadius BorderRadius::from(const KDecoration3::BorderRadius &radius)
 {
     return BorderRadius(radius.topLeft(), radius.topRight(), radius.bottomRight(), radius.bottomLeft());
 }
+#endif
 
 } // namespace KWin

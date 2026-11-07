@@ -9,19 +9,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Overridable
 set(PROJECT_DEP_VERSION
-        "6.7.0"
+        "6.3.0"
     CACHE STRING
         "Minimum version of Plasma workspace dependencies"
 )
 
 set(QT_MIN_VERSION
-    "6.10.0"
+    "6.8.0"
 CACHE STRING
     "Minimum supported Qt version"
 )
 
 set(KF6_MIN_VERSION
-    "6.24.0"
+    "6.13.0"
 CACHE STRING
     "Minimum supported KDE Frameworks version"
 )
@@ -205,6 +205,33 @@ set_package_properties(Plasma PROPERTIES
 )
 
 find_package(KDecoration3 ${PROJECT_DEP_VERSION} CONFIG REQUIRED)
+
+# Later KDecoration releases provide DecoratedWindowPrivateV3 and its menu
+# popup positioning API. Keep using it when available, while allowing this X11
+# fork to build against the V2 private API shipped by Plasma 6.3.
+set(CMAKE_REQUIRED_LIBRARIES KDecoration3::KDecoration3Private)
+check_cxx_source_compiles("\
+#include <KDecoration3/Private/DecoratedWindowPrivate>\n\
+int main()\n\
+{\n\
+    KDecoration3::DecoratedWindowPrivateV3 *window = nullptr;\n\
+    return window != nullptr;\n\
+}\n\
+" HAVE_KDECORATION3_DECORATED_WINDOW_PRIVATE_V3)
+unset(CMAKE_REQUIRED_LIBRARIES)
+
+# Border radius and outline metadata were added after Plasma 6.3.
+set(CMAKE_REQUIRED_LIBRARIES KDecoration3::KDecoration)
+check_cxx_source_compiles("\
+#include <KDecoration3/Decoration>\n\
+int main()\n\
+{\n\
+    auto radius = &KDecoration3::Decoration::borderRadius;\n\
+    auto outline = &KDecoration3::Decoration::borderOutline;\n\
+    return radius == nullptr || outline == nullptr;\n\
+}\n\
+" HAVE_KDECORATION3_BORDER_GEOMETRY)
+unset(CMAKE_REQUIRED_LIBRARIES)
 
 find_package(Breeze ${PROJECT_DEP_VERSION} CONFIG)
 set_package_properties(Breeze PROPERTIES
@@ -429,6 +456,19 @@ add_feature_info(libsystemd libsystemd_FOUND "Required for setting up the servic
 
 if(KWIN_BUILD_GLOBALSHORTCUTS)
     find_package(KGlobalAccelD REQUIRED)
+
+    # Newer KGlobalAccelD exposes the loaded platform interface directly.
+    # Plasma 6.3 instead has the platform plugin register itself with KWin.
+    set(CMAKE_REQUIRED_LIBRARIES K::KGlobalAccelD)
+    check_cxx_source_compiles("\
+#include <kglobalacceld.h>\n\
+int main()\n\
+{\n\
+    auto method = &KGlobalAccelD::interface;\n\
+    return method == nullptr;\n\
+}\n\
+" HAVE_KGLOBALACCELD_INTERFACE_METHOD)
+    unset(CMAKE_REQUIRED_LIBRARIES)
 endif()
 
 pkg_check_modules(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info>=0.2.0)

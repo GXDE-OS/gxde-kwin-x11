@@ -38,7 +38,9 @@ public:
     QRectF inflate(const QRectF &rect) const;
     QRectF deflate(const QRectF &rect) const;
 
+#if HAVE_KDECORATION3_BORDER_GEOMETRY
     static BorderOutline from(const KDecoration3::BorderOutline &outline);
+#endif
 
 private:
     qreal m_thickness;

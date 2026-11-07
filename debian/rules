@@ -2,6 +2,17 @@
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+CMAKE_OPTIONS = \
+	-DKF6_MIN_VERSION=6.13.0 \
+	-DPROJECT_DEP_VERSION=6.3.0 \
+	-DQT_MIN_VERSION=6.8.0
+
+ifneq (,$(filter pkg.gxde-kwin-x11.no-nightlight,$(DEB_BUILD_PROFILES)))
+CMAKE_OPTIONS += -DKWIN_BUILD_NIGHTLIGHT=OFF
+endif
+
 %:
 	dh $@ --buildsystem=cmake+ninja
 
@@ -11,10 +22,10 @@ override_dh_auto_configure:
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-		-DKF6_MIN_VERSION=6.24.0 \
-		-DPROJECT_DEP_VERSION=6.6.0 \
+		-DKWIN_BUILD_SCREENLOCKER=OFF \
 		-DKWIN_BUILD_X11=ON \
-		-DKWIN_BUILD_X11_BACKEND=ON
+		-DKWIN_BUILD_X11_BACKEND=ON \
+		$(CMAKE_OPTIONS)
 
 override_dh_auto_test:
 	# Tests are disabled in the configuration above.
@@ -22,6 +33,9 @@ override_dh_auto_test:
 
 override_dh_auto_install:
 	dh_auto_install --destdir=debian/tmp
+	mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
+	cp -a /usr/lib/$(DEB_HOST_MULTIARCH)/libkdecorations3.so.6* \
+		debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
 
 override_dh_missing:
 	dh_missing --fail-missing

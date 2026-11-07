@@ -29,7 +29,7 @@ namespace Decoration
 
 DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration)
     : QObject()
-    , DecoratedWindowPrivateV3(decoratedClient, decoration)
+    , DecoratedWindowPrivateBase(decoratedClient, decoration)
     , m_window(window)
     , m_clientSize(window->clientSize())
 {
@@ -330,6 +330,7 @@ QString DecoratedWindowImpl::applicationMenuObjectPath() const
     return m_window->applicationMenuObjectPath();
 }
 
+#if HAVE_KDECORATION3_DECORATED_WINDOW_PRIVATE_V3
 void DecoratedWindowImpl::popup(const KDecoration3::Positioner &positioner, QMenu *menu)
 {
     const QRectF anchorRect = positioner.anchorRect().translated(m_window->pos());
@@ -343,6 +344,7 @@ void DecoratedWindowImpl::popup(const KDecoration3::Positioner &positioner, QMen
         menu->popup(position.toPoint());
     }
 }
+#endif
 }
 }
 

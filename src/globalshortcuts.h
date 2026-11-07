@@ -111,6 +111,13 @@ public:
     void processPinchCancel();
     void processPinchEnd();
 
+#if KWIN_BUILD_GLOBALSHORTCUTS && !HAVE_KGLOBALACCELD_INTERFACE_METHOD
+    void setKGlobalAccelInterface(KGlobalAccelInterface *interface)
+    {
+        m_kglobalAccelInterface = interface;
+    }
+#endif
+
 private:
     void objectDeleted(QObject *object);
     bool add(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);

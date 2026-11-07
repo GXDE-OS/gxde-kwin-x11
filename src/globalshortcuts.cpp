@@ -106,7 +106,9 @@ void GlobalShortcutsManager::init()
             qCDebug(KWIN_CORE) << "Init of kglobalaccel failed";
             m_kglobalAccel.reset();
         } else {
+#if HAVE_KGLOBALACCELD_INTERFACE_METHOD
             m_kglobalAccelInterface = m_kglobalAccel->interface();
+#endif
             qCDebug(KWIN_CORE) << "KGlobalAcceld inited";
         }
     }

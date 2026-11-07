@@ -3,15 +3,14 @@ Section: x11
 Priority: optional
 Maintainer: CharOfString <root@charofstring.cc>
 Build-Depends:
- breeze-dev (>= 4:6.6.0~),
+ breeze-dev (>= 4:6.3.0~),
  cmake (>= 3.16~),
  debhelper-compat (= 13),
- extra-cmake-modules (>= 6.24.0~),
+ extra-cmake-modules (>= 6.13.0~),
  gettext,
  hwdata,
- knighttime-dev (>= 6.6.0~),
- kscreenlocker-dev (>= 6.6.0~),
- kwayland-dev (>= 4:6.6.0~),
+ knighttime-dev (>= 6.6.0~) <!pkg.gxde-kwin-x11.no-nightlight>,
+ kwayland-dev (>= 4:6.3.0~),
  libcanberra-dev,
  libcap-dev [linux-any],
  libdisplay-info-dev,
@@ -24,37 +23,37 @@ Build-Depends:
  libgbm-dev,
  libice-dev,
  libinput-dev,
- libkdecorations3-dev (>= 4:6.6.0~),
- libkf6auth-dev (>= 6.24.0~),
- libkf6colorscheme-dev (>= 6.24.0~),
- libkf6config-dev (>= 6.24.0~),
- libkf6configwidgets-dev (>= 6.24.0~),
- libkf6coreaddons-dev (>= 6.24.0~),
- libkf6crash-dev (>= 6.24.0~),
- libkf6dbusaddons-dev (>= 6.24.0~),
- libkf6declarative-dev (>= 6.24.0~),
- libkf6doctools-dev (>= 6.24.0~),
- libkf6globalaccel-dev (>= 6.24.0~),
- libkf6guiaddons-dev (>= 6.24.0~),
- libkf6i18n-dev (>= 6.24.0~),
- libkf6idletime-dev (>= 6.24.0~),
- libkf6itemviews-dev (>= 6.24.0~),
- libkf6kcmutils-dev (>= 6.24.0~),
- libkf6newstuff-dev (>= 6.24.0~),
- libkf6notifications-dev (>= 6.24.0~),
- libkf6package-dev (>= 6.24.0~),
- libkf6runner-dev (>= 6.24.0~),
- libkf6service-dev (>= 6.24.0~),
- libkf6svg-dev (>= 6.24.0~),
- libkf6widgetsaddons-dev (>= 6.24.0~),
- libkf6windowsystem-dev (>= 6.24.0~),
- libkf6xmlgui-dev (>= 6.24.0~),
- libkglobalacceld-dev (>= 6.6.0~),
- libkirigami-dev (>= 6.24.0~),
+ libkdecorations3-dev (>= 4:6.3.0~),
+ libkf6auth-dev (>= 6.13.0~),
+ libkf6colorscheme-dev (>= 6.13.0~),
+ libkf6config-dev (>= 6.13.0~),
+ libkf6configwidgets-dev (>= 6.13.0~),
+ libkf6coreaddons-dev (>= 6.13.0~),
+ libkf6crash-dev (>= 6.13.0~),
+ libkf6dbusaddons-dev (>= 6.13.0~),
+ libkf6declarative-dev (>= 6.13.0~),
+ libkf6doctools-dev (>= 6.13.0~),
+ libkf6globalaccel-dev (>= 6.13.0~),
+ libkf6guiaddons-dev (>= 6.13.0~),
+ libkf6i18n-dev (>= 6.13.0~),
+ libkf6idletime-dev (>= 6.13.0~),
+ libkf6itemviews-dev (>= 6.13.0~),
+ libkf6kcmutils-dev (>= 6.13.0~),
+ libkf6newstuff-dev (>= 6.13.0~),
+ libkf6notifications-dev (>= 6.13.0~),
+ libkf6package-dev (>= 6.13.0~),
+ libkf6runner-dev (>= 6.13.0~),
+ libkf6service-dev (>= 6.13.0~),
+ libkf6svg-dev (>= 6.13.0~),
+ libkf6widgetsaddons-dev (>= 6.13.0~),
+ libkf6windowsystem-dev (>= 6.13.0~),
+ libkf6xmlgui-dev (>= 6.13.0~),
+ libkglobalacceld-dev (>= 6.3.0~),
+ libkirigami-dev (>= 6.13.0~),
  liblcms2-dev,
  libpipewire-0.3-dev,
- libplasma-dev (>= 6.6.0~),
- libplasmaactivities-dev (>= 6.6.0~),
+ libplasma-dev (>= 6.3.0~),
+ libplasmaactivities-dev (>= 6.3.0~),
  libqaccessibilityclient-qt6-dev,
  libsm-dev,
  libsystemd-dev,
@@ -91,16 +90,16 @@ Build-Depends:
  pkgconf,
  plasma-wayland-protocols (>= 1.14.0~),
  python3:any,
- qt6-5compat-dev (>= 6.10.0~),
- qt6-base-dev (>= 6.10.0~),
- qt6-base-dev-tools (>= 6.10.0~),
- qt6-base-private-dev (>= 6.10.0~),
- qt6-declarative-dev (>= 6.10.0~),
- qt6-declarative-private-dev (>= 6.10.0~),
- qt6-sensors-dev (>= 6.10.0~),
- qt6-svg-dev (>= 6.10.0~),
- qt6-tools-dev (>= 6.10.0~),
- qt6-wayland-dev (>= 6.10.0~),
+ qt6-5compat-dev (>= 6.8.0~),
+ qt6-base-dev (>= 6.8.0~),
+ qt6-base-dev-tools (>= 6.8.0~),
+ qt6-base-private-dev (>= 6.8.0~),
+ qt6-declarative-dev (>= 6.8.0~),
+ qt6-declarative-private-dev (>= 6.8.0~),
+ qt6-sensors-dev (>= 6.8.0~),
+ qt6-svg-dev (>= 6.8.0~),
+ qt6-tools-dev (>= 6.8.0~),
+ qt6-wayland-dev (>= 6.8.0~),
  wayland-protocols (>= 1.38~),
  xwayland (>= 2:22.1.7-1~),
 Standards-Version: 4.7.0
@@ -109,7 +108,7 @@ Homepage: https://github.com/GXDE-OS/gxde-kwin-x11
 Vcs-Browser: https://github.com/GXDE-OS/gxde-kwin-x11
 Vcs-Git: https://github.com/GXDE-OS/gxde-kwin-x11.git
 
-Package: gxde-kwin-x11
+Package: gxde-kwin-x11-6
 Architecture: any
 Depends:
  hwdata,
@@ -126,8 +125,7 @@ Depends:
  qml6-module-qtquick-window,
  ${misc:Depends},
  ${shlibs:Depends},
-Recommends:
- kwin-style-aurorae,
+Suggests:
  kwin-style-breeze,
  systemsettings,
 Description: isolated GXDE KWin window manager for X11
@@ -137,6 +135,26 @@ Description: isolated GXDE KWin window manager for X11
  to the distribution KWin packages.
  .
  It deliberately does not ship a KWin Wayland compositor executable.
+
+Package: libgxde-kdecorations3-6
+Section: libs
+Architecture: any
+Multi-Arch: same
+Provides:
+ libkdecorations3-6 (= ${binary:Version}),
+Conflicts:
+ libkdecorations3-6,
+Replaces:
+ libkdecorations3-6,
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: KDecoration 3 runtime isolated for GXDE KWin X11
+ This package contains the KDecoration 3 public runtime library required by
+ gxde-kwin_x11. It intentionally omits Debian's Breaks against KDecoration 2,
+ allowing the Qt 6 GXDE fork to coexist with GXDE's existing Qt 5 window
+ manager. It conflicts only with the distribution package that owns the same
+ KDecoration 3 library files.
 
 Package: libgxde-kwin-x11-6
 Section: libs
@@ -154,14 +172,14 @@ Package: gxde-kwin-x11-dev
 Section: libdevel
 Architecture: any
 Depends:
- gxde-kwin-x11 (= ${binary:Version}),
+ gxde-kwin-x11-6 (= ${binary:Version}),
  libepoxy-dev (>= 1.3),
  libgxde-kwin-x11-6 (= ${binary:Version}),
- libkf6config-dev (>= 6.24.0~),
- libkf6coreaddons-dev (>= 6.24.0~),
- libkf6windowsystem-dev (>= 6.24.0~),
- qt6-base-dev (>= 6.10.0~),
- qt6-declarative-dev (>= 6.10.0~),
+ libkf6config-dev (>= 6.13.0~),
+ libkf6coreaddons-dev (>= 6.13.0~),
+ libkf6windowsystem-dev (>= 6.13.0~),
+ qt6-base-dev (>= 6.8.0~),
+ qt6-declarative-dev (>= 6.8.0~),
  ${misc:Depends},
 Description: development files for the isolated GXDE KWin X11 fork
  This package contains headers, CMake package metadata, D-Bus interface

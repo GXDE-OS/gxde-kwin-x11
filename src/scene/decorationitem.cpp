@@ -102,8 +102,10 @@ DecorationItem::DecorationItem(KDecoration3::Decoration *decoration, Window *win
             this, &DecorationItem::handleDecorationGeometryChanged);
     connect(decoration, &KDecoration3::Decoration::bordersChanged,
             this, &DecorationItem::handleDecorationGeometryChanged);
+#if HAVE_KDECORATION3_BORDER_GEOMETRY
     connect(decoration, &KDecoration3::Decoration::borderOutlineChanged,
             this, &DecorationItem::updateOutline);
+#endif
 
     connect(renderer(), &DecorationRenderer::damaged,
             this, qOverload<const QRegion &>(&Item::scheduleRepaint));
@@ -164,6 +166,7 @@ void DecorationItem::updateScale()
 
 void DecorationItem::updateOutline()
 {
+#if HAVE_KDECORATION3_BORDER_GEOMETRY
     if (m_decoration->borderOutline().isNull()) {
         m_outlineItem.reset();
     } else {
@@ -174,6 +177,9 @@ void DecorationItem::updateOutline()
             m_outlineItem->setOutline(outline);
         }
     }
+#else
+    m_outlineItem.reset();
+#endif
 }
 
 void DecorationItem::handleDecorationGeometryChanged()
