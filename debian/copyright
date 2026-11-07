@@ -1,0 +1,28 @@
+This package is a GXDE-maintained fork of KDE KWin.
+
+Upstream source: https://invent.kde.org/plasma/kwin
+GXDE fork:       https://github.com/GXDE-OS/gxde-kwin-x11
+
+Copyright is held by the KDE KWin contributors and the individual authors
+named in the source files. GXDE-specific packaging and integration changes are
+Copyright (C) 2026 GXDE OS Team.
+
+The source tree uses SPDX copyright and license declarations. The licenses
+present in this release are:
+
+  BSD-2-Clause
+  BSD-3-Clause
+  CC0-1.0
+  GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+  GPL-2.0-or-later
+  LGPL-2.0-only
+  LGPL-2.0-or-later
+  LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+  LGPL-2.1-or-later
+  MIT
+
+The complete corresponding license texts are included in the source under
+LICENSES/. On Debian systems, the GNU GPL and LGPL texts are also available
+under /usr/share/common-licenses/.
+
+The Debian packaging files may be redistributed under GPL-2.0-or-later.

@@ -1,0 +1,13 @@
+gxde-kwin-x11 for Debian
+------------------------
+
+This fork is packaged under its own namespace and does not declare Conflicts,
+Breaks or Replaces against the distribution KWin packages. It is intended to
+be co-installable with both the X11 and Wayland variants of upstream KWin.
+
+The source still compiles shared Wayland protocol and support code used by the
+KWin core library. This is not a Wayland compositor build: neither
+kwin_wayland nor gxde-kwin_wayland is a CMake target or an installed file.
+
+The package build disables upstream tests and explicitly enables only the
+gxde-kwin_x11 executable backend.

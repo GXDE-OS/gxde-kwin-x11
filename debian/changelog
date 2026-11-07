@@ -1,0 +1,5 @@
+gxde-kwin-x11 (6.7.6-1) unstable; urgency=medium
+
+  * Initial Debian release.
+
+ -- CharOfString <root@charofstring.cc>  Sat, 07 Nov 2026 12:06:05 -0600

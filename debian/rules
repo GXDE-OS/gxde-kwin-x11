@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		-DBUILD_TESTING=OFF \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_SKIP_RPATH=ON \
+		-DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+		-DKF6_MIN_VERSION=6.24.0 \
+		-DPROJECT_DEP_VERSION=6.6.0 \
+		-DKWIN_BUILD_X11=ON \
+		-DKWIN_BUILD_X11_BACKEND=ON
+
+override_dh_auto_test:
+	# Tests are disabled in the configuration above.
+	:
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/tmp
+
+override_dh_missing:
+	dh_missing --fail-missing

@@ -7,7 +7,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-// Overridable
+# Overridable
 set(PROJECT_DEP_VERSION
         "6.7.0"
     CACHE STRING

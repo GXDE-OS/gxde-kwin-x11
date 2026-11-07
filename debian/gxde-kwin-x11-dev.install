@@ -1,0 +1,5 @@
+usr/include/gxde-kwin_x11-data/
+usr/lib/*/cmake/GXDEKWinX11/
+usr/lib/*/cmake/GXDEKWinX11DBusInterface/
+usr/lib/*/libgxde-kwin_x11.so
+usr/share/dbus-1/interfaces/gxde-kwin_x11_*.xml
