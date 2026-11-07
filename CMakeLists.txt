@@ -7,9 +7,25 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(PROJECT_DEP_VERSION "6.7.0")
-set(QT_MIN_VERSION "6.10.0")
-set(KF6_MIN_VERSION "6.26.0")
+// Overridable
+set(PROJECT_DEP_VERSION
+        "6.7.0"
+    CACHE STRING
+        "Minimum version of Plasma workspace dependencies"
+)
+
+set(QT_MIN_VERSION
+    "6.10.0"
+CACHE STRING
+    "Minimum supported Qt version"
+)
+
+set(KF6_MIN_VERSION
+    "6.24.0"
+CACHE STRING
+    "Minimum supported KDE Frameworks version"
+)
+
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
 
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
