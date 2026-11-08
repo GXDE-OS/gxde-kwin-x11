@@ -242,6 +242,7 @@ private:
     void handleOutputEnabled(Output *output);
     void handleOutputDisabled(Output *output);
 
+#if KWIN_BUILD_SCREENLOCKER && HAVE_KSCREENLOCKER_LOCK_SCREEN_SHOWN
     class LockScreenPresentationWatcher : public QObject
     {
     public:
@@ -250,6 +251,7 @@ private:
     private:
         QSet<Output *> m_signaledOutputs;
     };
+#endif
 
     Display *m_display = nullptr;
     CompositorInterface *m_compositor = nullptr;

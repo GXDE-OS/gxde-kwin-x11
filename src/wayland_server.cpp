@@ -618,9 +618,11 @@ void WaylandServer::initScreenLocker()
 
     ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
 
+#if HAVE_KSCREENLOCKER_LOCK_SCREEN_SHOWN
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::aboutToLock, this, [this]() {
         new LockScreenPresentationWatcher(this);
     });
+#endif
 
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::aboutToStartGreeter, this, [this]() {
         if (m_screenLockerClientConnection) {
@@ -773,7 +775,11 @@ bool WaylandServer::isScreenLocked() const
     if (!kwinApp()->supportsLockScreen()) {
         return false;
     }
+#if HAVE_KSCREENLOCKER_LOCK_SCREEN_SHOWN
     return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked || ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
+#else
+    return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked;
+#endif
 #else
     return false;
 #endif
@@ -836,7 +842,7 @@ void WaylandServer::setRenderBackend(RenderBackend *backend)
     }
 }
 
-#if KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER && HAVE_KSCREENLOCKER_LOCK_SCREEN_SHOWN
 WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(WaylandServer *server)
 {
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked, this, [this] {

@@ -481,6 +481,22 @@ int main()\n\
     return method == nullptr;\n\
 }\n\
 " HAVE_KGLOBALACCELD_INTERFACE_METHOD)
+
+    # Even newer KGlobalAccelD drops the platform interface and handles input
+    # events itself.
+    check_cxx_source_compiles("\
+#include <kglobalacceld.h>\n\
+int main()\n\
+{\n\
+    KGlobalAccelD *daemon = nullptr;\n\
+    if (daemon) {\n\
+        daemon->keyEvent(0, ShortcutKeyState::Pressed);\n\
+        daemon->pointerPressed(Qt::NoButton);\n\
+        daemon->axisTriggered(0);\n\
+    }\n\
+    return 0;\n\
+}\n\
+" HAVE_KGLOBALACCELD_KEY_EVENT_METHOD)
     unset(CMAKE_REQUIRED_LIBRARIES)
 endif()
 
@@ -497,6 +513,20 @@ if (KWIN_BUILD_SCREENLOCKER)
         TYPE REQUIRED
         PURPOSE "For screenlocker integration in kwin_wayland"
     )
+
+    # Older KScreenLocker neither waits for the lock screen to be presented
+    # nor reports the AcquiringLock state.
+    set(CMAKE_REQUIRED_LIBRARIES PW::KScreenLocker)
+    check_cxx_source_compiles("\
+#include <KScreenLocker/KsldApp>\n\
+int main()\n\
+{\n\
+    auto method = &ScreenLocker::KSldApp::lockScreenShown;\n\
+    auto state = ScreenLocker::KSldApp::AcquiringLock;\n\
+    return method == nullptr || state == ScreenLocker::KSldApp::Locked;\n\
+}\n\
+" HAVE_KSCREENLOCKER_LOCK_SCREEN_SHOWN)
+    unset(CMAKE_REQUIRED_LIBRARIES)
 endif()
 
 ecm_find_qmlmodule(QtQuick 2.3)

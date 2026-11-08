@@ -19,7 +19,9 @@
 class QAction;
 #if KWIN_BUILD_GLOBALSHORTCUTS
 class KGlobalAccelD;
+#if !HAVE_KGLOBALACCELD_KEY_EVENT_METHOD
 class KGlobalAccelInterface;
+#endif
 #endif
 namespace KWin
 {
@@ -111,7 +113,7 @@ public:
     void processPinchCancel();
     void processPinchEnd();
 
-#if KWIN_BUILD_GLOBALSHORTCUTS && !HAVE_KGLOBALACCELD_INTERFACE_METHOD
+#if KWIN_BUILD_GLOBALSHORTCUTS && !HAVE_KGLOBALACCELD_INTERFACE_METHOD && !HAVE_KGLOBALACCELD_KEY_EVENT_METHOD
     void setKGlobalAccelInterface(KGlobalAccelInterface *interface)
     {
         m_kglobalAccelInterface = interface;
@@ -126,7 +128,9 @@ private:
 
 #if KWIN_BUILD_GLOBALSHORTCUTS
     std::unique_ptr<KGlobalAccelD> m_kglobalAccel;
+#if !HAVE_KGLOBALACCELD_KEY_EVENT_METHOD
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;
+#endif
 #endif
     std::unique_ptr<GestureRecognizer> m_touchpadGestureRecognizer;
     std::unique_ptr<GestureRecognizer> m_touchscreenGestureRecognizer;
