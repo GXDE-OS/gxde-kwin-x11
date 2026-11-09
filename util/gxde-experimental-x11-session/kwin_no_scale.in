@@ -1,5 +1,6 @@
 #!/bin/sh
 # SPDX-FileCopyrightText: 2026 CharOfString <root@charofstring.cc>
+# SPDX-FileCopyrightText: 2026 Aromatic <symwww@outlook.com>
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -13,4 +14,32 @@ if [ -x "$gui_settings" ] && command -v dbus-send >/dev/null 2>&1; then
     fi
 fi
 
-exec @GXDE_KWIN_BINARY@ ":appFilePath=$0" "$@"
+# startdde waits for this launcher to exit before starting the desktop.
+export QT_QPA_PLATFORM=xcb
+
+if [ -z "${DDE_SESSION_PROCESS_COOKIE_ID:-}" ]; then
+    exec @GXDE_KWIN_BINARY@ ":appFilePath=$0" "$@"
+fi
+
+# KWin is not a Deepin session-cookie client. Keep it running in the
+# login session, and return once it claims the X11 window manager role.
+# startdde's existing process waiter then releases the remaining startup.
+unset DDE_SESSION_PROCESS_COOKIE_ID
+@GXDE_KWIN_BINARY@ ":appFilePath=$0" "$@" &
+kwin_pid=$!
+
+tries=0
+while [ "$tries" -lt 100 ] && kill -0 "$kwin_pid" 2>/dev/null; do
+    if xprop -root _NET_SUPPORTING_WM_CHECK 2>/dev/null | grep -q 'window id # 0x'; then
+        exit 0
+    fi
+    sleep 0.1
+    tries=$((tries + 1))
+done
+
+if ! kill -0 "$kwin_pid" 2>/dev/null; then
+    wait "$kwin_pid"
+else
+    echo 'kwin_no_scale: KWin did not become the X11 window manager' >&2
+fi
+exit 1
