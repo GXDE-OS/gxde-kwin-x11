@@ -21,9 +21,9 @@ Build-Depends:
  libfontconfig-dev,
  libfreetype-dev,
  libgbm-dev,
+ libgxde-decoration3-x11-dev (>= 6.8.4~),
  libice-dev,
  libinput-dev,
- libkdecorations3-dev (>= 4:6.3.0~),
  libkf6auth-dev (>= 6.13.0~),
  libkf6colorscheme-dev (>= 6.13.0~),
  libkf6config-dev (>= 6.13.0~),
@@ -126,7 +126,6 @@ Depends:
  ${misc:Depends},
  ${shlibs:Depends},
 Suggests:
- kwin-style-breeze,
  systemsettings,
 Description: isolated GXDE KWin window manager for X11
  This package provides the GXDE fork of the KWin X11 window manager. Its
@@ -135,26 +134,6 @@ Description: isolated GXDE KWin window manager for X11
  to the distribution KWin packages.
  .
  It deliberately does not ship a KWin Wayland compositor executable.
-
-Package: libgxde-kdecorations3-6
-Section: libs
-Architecture: any
-Multi-Arch: same
-Provides:
- libkdecorations3-6 (= ${binary:Version}),
-Conflicts:
- libkdecorations3-6,
-Replaces:
- libkdecorations3-6,
-Depends:
- ${misc:Depends},
- ${shlibs:Depends},
-Description: KDecoration 3 runtime isolated for GXDE KWin X11
- This package contains the KDecoration 3 public runtime library required by
- gxde-kwin_x11. It intentionally omits Debian's Breaks against KDecoration 2,
- allowing the Qt 6 GXDE fork to coexist with GXDE's existing Qt 5 window
- manager. It conflicts only with the distribution package that owns the same
- KDecoration 3 library files.
 
 Package: libgxde-kwin-x11-6
 Section: libs

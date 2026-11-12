@@ -1,5 +1,0 @@
-# The public ABI is supplied for the same-version GXDE runtime packages.
-libgxde-kdecorations3-6: no-symbols-control-file usr/lib/*/libkdecorations3.so.6.*
-
-# GXDE packages are released outside the Debian BTS.
-libgxde-kdecorations3-6: initial-upload-closes-no-bugs

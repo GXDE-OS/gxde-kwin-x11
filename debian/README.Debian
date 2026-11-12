@@ -5,12 +5,13 @@ The runtime binary package is named gxde-kwin-x11-6 so that it does not replace
 the existing GXDE 5.x package named gxde-kwin-x11. The fork's files are under
 their own namespace and do not conflict with the existing KWin files.
 
-Debian's libkdecorations3-6 package declares a Breaks against KDecoration 2.
-This source therefore emits libgxde-kdecorations3-6 with the same Qt 6 public
-library but without that cross-major-version Breaks. It still conflicts with
-the distribution libkdecorations3-6 package because both own the same Qt 6
-library file. The KDecoration 2 runtime remains installed and usable by the
-existing GXDE window manager.
+Debian's libkdecorations3-6 package declares a Breaks against KDecoration 2,
+so installing libkdecorations3-dev would remove GXDE's existing window manager.
+This source therefore builds against gxde-decoration3-x11 (KDecoration 3 built
+under a GXDE-specific library name, see libgxde-decoration3-x11-dev), which can
+be installed next to the KDecoration 2 runtime. Decoration plugins built
+against the distribution libkdecorations3, such as kwin-style-breeze, are not
+compatible with this build.
 
 The source still compiles shared Wayland protocol and support code used by the
 KWin core library. This is not a Wayland compositor build: neither

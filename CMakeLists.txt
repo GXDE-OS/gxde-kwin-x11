@@ -204,7 +204,14 @@ set_package_properties(Plasma PROPERTIES
     TYPE RUNTIME
 )
 
-find_package(KDecoration3 ${PROJECT_DEP_VERSION} CONFIG REQUIRED)
+# GXDE builds KDecoration 3 as gxde-decoration3-x11 so that it can coexist with
+# the KDecoration 2 runtime used by GXDE's existing window manager. Expose its
+# targets under the upstream names so the rest of the tree stays unchanged.
+find_package(gxde-decoration3-x11 ${PROJECT_DEP_VERSION} CONFIG REQUIRED)
+set_target_properties(gxde-decoration3-x11::Decoration gxde-decoration3-x11::DecorationPrivate
+    PROPERTIES IMPORTED_GLOBAL TRUE)
+add_library(KDecoration3::KDecoration ALIAS gxde-decoration3-x11::Decoration)
+add_library(KDecoration3::KDecoration3Private ALIAS gxde-decoration3-x11::DecorationPrivate)
 
 # Later KDecoration releases provide DecoratedWindowPrivateV3 and its menu
 # popup positioning API. Keep using it when available, while allowing this X11

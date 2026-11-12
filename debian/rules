@@ -2,8 +2,6 @@
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
-DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
-
 CMAKE_OPTIONS = \
 	-DKF6_MIN_VERSION=6.13.0 \
 	-DPROJECT_DEP_VERSION=6.3.0 \
@@ -30,12 +28,6 @@ override_dh_auto_configure:
 override_dh_auto_test:
 	# Tests are disabled in the configuration above.
 	:
-
-override_dh_auto_install:
-	dh_auto_install --destdir=debian/tmp
-	mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
-	cp -a /usr/lib/$(DEB_HOST_MULTIARCH)/libkdecorations3.so.6* \
-		debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
 
 override_dh_missing:
 	dh_missing --fail-missing
