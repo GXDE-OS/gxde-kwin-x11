@@ -151,6 +151,7 @@ Depends:
  gxde-kwin-x11-6 (>= ${source:Version}),
  procps,
  startgxde,
+ systemd,
  x11-utils,
  ${misc:Depends},
 Description: Experimental GXDE X11 session with GXDE's KWin6

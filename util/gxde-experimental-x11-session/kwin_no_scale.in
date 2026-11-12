@@ -25,12 +25,21 @@ fi
 # login session, and return once it claims the X11 window manager role.
 # startdde's existing process waiter then releases the remaining startup.
 unset DDE_SESSION_PROCESS_COOKIE_ID
+wm_window() {
+    xprop -root _NET_SUPPORTING_WM_CHECK 2>/dev/null \
+        | sed -n 's/.*window id # \(0x[0-9a-fA-F]*\).*/\1/p'
+}
+previous_wm_window=$(wm_window)
 @GXDE_KWIN_BINARY@ ":appFilePath=$0" "$@" &
 kwin_pid=$!
 
 tries=0
 while [ "$tries" -lt 100 ] && kill -0 "$kwin_pid" 2>/dev/null; do
-    if xprop -root _NET_SUPPORTING_WM_CHECK 2>/dev/null | grep -q 'window id # 0x'; then
+    current_wm_window=$(wm_window)
+    owner_pid=$(busctl --user call org.freedesktop.DBus /org/freedesktop/DBus \
+        org.freedesktop.DBus GetConnectionUnixProcessID s org.kde.KWin 2>/dev/null)
+    if [ -n "$current_wm_window" ] && [ "$current_wm_window" != "$previous_wm_window" ] \
+        && [ "$owner_pid" = "u $kwin_pid" ]; then
         exit 0
     fi
     sleep 0.1
