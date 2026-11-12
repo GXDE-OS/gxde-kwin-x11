@@ -15,6 +15,9 @@
 
 // kwin
 #include "compositor.h"
+#if KWIN_BUILD_X11
+#include "compositor_x11.h"
+#endif
 #include "core/output.h"
 #include "core/renderbackend.h"
 #include "debug_console.h"
@@ -303,6 +306,24 @@ bool CompositorDBusInterface::platformRequiresCompositing() const
 void CompositorDBusInterface::reinitialize()
 {
     m_compositor->reinitialize();
+}
+
+void CompositorDBusInterface::suspend()
+{
+#if KWIN_BUILD_X11
+    if (auto *compositor = qobject_cast<X11Compositor *>(m_compositor)) {
+        compositor->suspend(X11Compositor::UserSuspend);
+    }
+#endif
+}
+
+void CompositorDBusInterface::resume()
+{
+#if KWIN_BUILD_X11
+    if (auto *compositor = qobject_cast<X11Compositor *>(m_compositor)) {
+        compositor->resume(X11Compositor::UserSuspend);
+    }
+#endif
 }
 
 QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const

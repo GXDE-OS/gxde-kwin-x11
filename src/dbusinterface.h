@@ -169,6 +169,8 @@ public Q_SLOTS:
      * On signal Compositor reloads settings and restarts.
      */
     void reinitialize();
+    void suspend();
+    void resume();
 
 Q_SIGNALS:
     void compositingToggled(bool active);

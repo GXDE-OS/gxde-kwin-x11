@@ -8,6 +8,8 @@
     <property name="compositingType" type="s" access="read"/>
     <property name="supportedOpenGLPlatformInterfaces" type="as" access="read"/>
     <property name="platformRequiresCompositing" type="b" access="read"/>
+    <method name="suspend"/>
+    <method name="resume"/>
     <signal name="compositingToggled">
       <arg name="active" type="b" direction="out"/>
     </signal>
