@@ -12,6 +12,7 @@
 #include "netinfo.h"
 // kwin
 #include "rootinfo_filter.h"
+#include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -38,6 +39,14 @@ RootInfo *RootInfo::create()
     if (error) {
         qCDebug(KWIN_CORE) << "Error occurred while lowering support window: " << error->error_code;
     }
+
+    // deepin-kwin also calls itself "KWin". Mark the supporting window so that
+    // GXDE clients (dxcb) can tell gxde-kwin_x11 apart. Set it before RootInfo
+    // publishes _NET_SUPPORTING_WM_CHECK, so it is there when clients look.
+    const Xcb::Atom gxdeKwinX11(QByteArrayLiteral("_GXDE_KWIN_X11"), false, kwinApp()->x11Connection());
+    const uint32_t gxdeKwinX11Version = 1;
+    xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, supportWindow,
+                        gxdeKwinX11, XCB_ATOM_CARDINAL, 32, 1, &gxdeKwinX11Version);
 
     const NET::Properties properties = NET::Supported
         | NET::SupportingWMCheck
