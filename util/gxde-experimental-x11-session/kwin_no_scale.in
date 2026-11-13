@@ -1,0 +1,16 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2026 CharOfString <root@charofstring.cc>
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+gui_settings=/usr/libexec/dtk5/DGui/bin/deepin-gui-settings
+if [ -x "$gui_settings" ] && command -v dbus-send >/dev/null 2>&1; then
+    radius=$(dbus-send --print-reply=literal --session \
+        --dest=com.gxde.daemon.personalization /com/gxde/daemon/personalization \
+        com.gxde.daemon.personalization.Radius 2>/dev/null | awk '/int32/ {print $2}')
+    if [ -n "$radius" ]; then
+        "$gui_settings" --set "DTK/WindowRadius" -i "$radius" >/dev/null 2>&1 || :
+    fi
+fi
+
+exec @GXDE_KWIN_BINARY@ ":appFilePath=$0" "$@"

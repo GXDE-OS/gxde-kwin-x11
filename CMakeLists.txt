@@ -99,6 +99,7 @@ option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 option(KWIN_BUILD_NIGHTLIGHT "Enable building of KWin with nightlight support" ON)
 option(GXDE_KWIN_BUILD_WM_SHIM "Build the GXDE/Deepin window manager compatibility layer from util/gxde-wm-shim/" ON)
+option(GXDE_KWIN_BUILD_EXPERIMENTAL_SESSION "Install the GXDE-experimental-x11 login session" ON)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
@@ -641,9 +642,13 @@ if (GXDE_KWIN_BUILD_WM_SHIM)
     set(INSTALL_KDE_GLOBAL_CONFIGS OFF)
     # Only deepin-kwin reads the DConfig and deepin-log-viewer descriptions.
     set(INSTALL_DEEPIN_KWIN_DCONFIG OFF)
-    # The GXDE X11 Exp session provides its own kwin_no_scale wrapper.
+    # The GXDE-experimental-x11 session provides its own kwin_no_scale wrapper.
     set(USE_KWIN_NO_SCALE OFF)
     add_subdirectory(util/gxde-wm-shim)
+endif()
+
+if (GXDE_KWIN_BUILD_EXPERIMENTAL_SESSION)
+    add_subdirectory(util/gxde-experimental-x11-session)
 endif()
 
 # This fork intentionally ships only the standalone X11 window-manager

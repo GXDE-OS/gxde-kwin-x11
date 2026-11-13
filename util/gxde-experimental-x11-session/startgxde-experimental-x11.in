@@ -1,0 +1,44 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2026 CharOfString <root@charofstring.cc>
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+if [ -f "$HOME/.dde_env" ]; then
+    . "$HOME/.dde_env"
+    # Handling configuration migration issues
+    if [ -n "${QT_SCALE_FACTOR:-}" ]; then
+        unset QT_SCALE_FACTOR
+        unset QT_SCREEN_SCALE_FACTORS
+        unset QT_AUTO_SCREEN_SCALE_FACTOR
+        unset QT_FONT_DPI
+        export STARTDDE_MIGRATE_SCALE_FACTOR=1
+    fi
+elif [ -f "$HOME/.pam_environment" ] && [ -n "${QT_SCALE_FACTOR:-}" ]; then
+    unset QT_SCALE_FACTOR
+    export STARTDDE_MIGRATE_SCALE_FACTOR=1
+fi
+
+PATH="@GXDE_SESSION_WRAPPER_DIR@:$PATH"
+export PATH
+
+GXDE_KWIN_X11_WM_SHIM="${GXDE_KWIN_X11_WM_SHIM:-1}"
+export GXDE_KWIN_X11_WM_SHIM
+
+cleanup_session_clients()
+{
+    [ -n "${XAUTHORITY:-}" ] || return 0
+    for name in gxde-dock gxde-launcher; do
+        for pid in $(pgrep -u "$(id -u)" -x "$name" 2>/dev/null); do
+            if tr '\000' '\n' <"/proc/$pid/environ" 2>/dev/null | grep -Fxq "XAUTHORITY=$XAUTHORITY"; then
+                kill "$pid" 2>/dev/null || :
+            fi
+        done
+    done
+}
+
+trap cleanup_session_clients EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+/usr/bin/startdde "$@"

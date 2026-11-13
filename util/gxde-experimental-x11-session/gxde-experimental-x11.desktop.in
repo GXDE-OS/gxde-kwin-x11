@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 CharOfString <root@charofstring.cc>
+#
+# SPDX-License-Identifier: CC0-1.0
+[Desktop Entry]
+Type=Application
+Name=GXDE-experimental-x11
+Comment=GXDE desktop on the experimental gxde-kwin_x11 window manager
+Comment[zh_CN]=使用实验性 gxde-kwin_x11 窗口管理器的 GXDE 桌面
+Exec=@GXDE_SESSION_LAUNCHER_PATH@
+TryExec=@GXDE_SESSION_LAUNCHER_PATH@
+DesktopNames=GXDE

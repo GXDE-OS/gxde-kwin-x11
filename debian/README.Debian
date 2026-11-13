@@ -36,6 +36,15 @@ gxde-wm-shim package of the existing window manager:
    the StartDetached method of the gxdewmshim plugin instead. The gtkframe
    script is not installed because KWin handles _GTK_FRAME_EXTENTS itself.
 
+The gxde-experimental-x11-session package adds the GXDE-experimental-x11
+login session. Like the regular GXDE session it runs startdde, which starts
+the window manager as "kwin_no_scale"; the session launcher
+startgxde-experimental-x11 puts /usr/lib/gxde-kwin_x11/experimental-session,
+holding a kwin_no_scale wrapper for gxde-kwin_x11, in front of PATH. It also
+loads ~/.dde_env, which /etc/X11/Xsession.d/00deepin-dde-env only does for
+/usr/bin/startdde. The regular session and the kwin_no_scale of gxde-wm-shim
+are not changed.
+
 The source still compiles shared Wayland protocol and support code used by the
 KWin core library. This is not a Wayland compositor build: neither
 kwin_wayland nor gxde-kwin_wayland is a CMake target or an installed file.

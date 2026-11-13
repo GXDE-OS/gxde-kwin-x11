@@ -1,0 +1,3 @@
+usr/bin/startgxde-experimental-x11
+usr/lib/gxde-kwin_x11/experimental-session/kwin_no_scale
+usr/share/xsessions/gxde-experimental-x11.desktop
