@@ -13,6 +13,11 @@ be installed next to the KDecoration 2 runtime. Decoration plugins built
 against the distribution libkdecorations3, such as kwin-style-breeze, are not
 compatible with this build.
 
+Night Light likewise uses gxde-nighttime-x11 (libgxde-nighttime-x11-dev) instead
+of KNightTime, which is not available for this distribution. Its scheduling
+service is D-Bus activated as com.gxde.NightTimeX11. Building with the
+pkg.gxde-kwin-x11.no-nightlight profile disables Night Light entirely.
+
 The source still compiles shared Wayland protocol and support code used by the
 KWin core library. This is not a Wayland compositor build: neither
 kwin_wayland nor gxde-kwin_wayland is a CMake target or an installed file.

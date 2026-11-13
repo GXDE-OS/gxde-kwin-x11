@@ -163,11 +163,15 @@ if(KWIN_BUILD_TABBOX AND KWIN_BUILD_KCMS)
 endif()
 
 if(KWIN_BUILD_NIGHTLIGHT)
-    find_package(KNightTime ${PROJECT_DEP_VERSION} CONFIG)
-    set_package_properties(KNightTime PROPERTIES
+    find_package(gxde-nighttime-x11 ${PROJECT_DEP_VERSION} CONFIG)
+    set_package_properties(gxde-nighttime-x11 PROPERTIES
         PURPOSE "Needed for Night Light"
         TYPE REQUIRED
     )
+    if(gxde-nighttime-x11_FOUND)
+        set_target_properties(gxde-nighttime-x11::NightTime PROPERTIES IMPORTED_GLOBAL TRUE)
+        add_library(KNightTime ALIAS gxde-nighttime-x11::NightTime)
+    endif()
 endif()
 
 find_package(Threads)

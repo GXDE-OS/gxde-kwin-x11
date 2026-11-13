@@ -9,7 +9,6 @@ Build-Depends:
  extra-cmake-modules (>= 6.13.0~),
  gettext,
  hwdata,
- knighttime-dev (>= 6.6.0~) <!pkg.gxde-kwin-x11.no-nightlight>,
  kwayland-dev (>= 4:6.3.0~),
  libcanberra-dev,
  libcap-dev [linux-any],
@@ -22,6 +21,7 @@ Build-Depends:
  libfreetype-dev,
  libgbm-dev,
  libgxde-decoration3-x11-dev (>= 6.8.4~),
+ libgxde-nighttime-x11-dev (>= 6.8.4~) <!pkg.gxde-kwin-x11.no-nightlight>,
  libice-dev,
  libinput-dev,
  libkf6auth-dev (>= 6.13.0~),
@@ -124,6 +124,7 @@ Depends:
  qml6-module-qtquick-layouts,
  qml6-module-qtquick-window,
  ${misc:Depends},
+ ${nightlight:Depends},
  ${shlibs:Depends},
 Suggests:
  systemsettings,

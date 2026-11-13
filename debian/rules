@@ -9,6 +9,10 @@ CMAKE_OPTIONS = \
 
 ifneq (,$(filter pkg.gxde-kwin-x11.no-nightlight,$(DEB_BUILD_PROFILES)))
 CMAKE_OPTIONS += -DKWIN_BUILD_NIGHTLIGHT=OFF
+NIGHTLIGHT_DEPENDS =
+else
+# The nightlight plugin talks to the D-Bus activated gxde-nighttime-x11d.
+NIGHTLIGHT_DEPENDS = gxde-nighttime-x11
 endif
 
 %:
@@ -28,6 +32,9 @@ override_dh_auto_configure:
 override_dh_auto_test:
 	# Tests are disabled in the configuration above.
 	:
+
+override_dh_gencontrol:
+	dh_gencontrol -- -Vnightlight:Depends="$(NIGHTLIGHT_DEPENDS)"
 
 override_dh_missing:
 	dh_missing --fail-missing
