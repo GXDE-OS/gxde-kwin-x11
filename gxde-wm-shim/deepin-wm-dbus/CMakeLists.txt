@@ -1,5 +1,5 @@
-set(TARGET_PATH "${CMAKE_INSTALL_PREFIX}/bin")
-set(TARGET_NAME "deepin-wm-dbus")
+set(TARGET_PATH "${CMAKE_INSTALL_PREFIX}/${DEEPIN_WM_DBUS_INSTALL_DIR}")
+set(TARGET_NAME "${DEEPIN_WM_DBUS_NAME}")
 
 find_package(Qt6Core REQUIRED)
 find_package(Qt6DBus REQUIRED)
@@ -25,16 +25,17 @@ endif()
 configure_file(com.deepin.wm.xml.in com.deepin.wm.xml)
 configure_file(com.deepin.wm.service.in com.deepin.wm.service)
 
-install_files(
-    "/share/dbus-1/interfaces"
-    FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/com.deepin.wm.xml
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/com.deepin.wm.xml
+    DESTINATION "${DEEPIN_WM_DBUS_INTERFACE_DIR}"
+    RENAME "${DEEPIN_WM_DBUS_INTERFACE_FILE}"
 )
-install_files(
-    "/share/dbus-1/services"
-    FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/com.deepin.wm.service
-)
+if (DEEPIN_WM_DBUS_INSTALL_SERVICE)
+    install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/com.deepin.wm.service
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/dbus-1/services"
+    )
+endif()
 
 qt6_add_dbus_adaptor(
     wm_SRCS
@@ -66,4 +67,4 @@ target_link_libraries(
     ${GSETTINGS_LDFLAGS}
 )
 
-install_targets("/bin" deepin-wm-dbus)
+install(TARGETS ${TARGET_NAME} DESTINATION "${DEEPIN_WM_DBUS_INSTALL_DIR}")

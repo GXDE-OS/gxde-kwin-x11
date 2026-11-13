@@ -4,11 +4,11 @@ function runCommand(program, arguments) {
     print(program, typeof(program));
     print(arguments, typeof(arguments));
 
-    if (arguments && arguments.length > 0) {
-        workspace.__dde__.startDetached(program, arguments);
-    } else {
-        workspace.__dde__.startDetached(program);
-    }
+    // deepin-kwin's workspace.__dde__.startDetached() is provided on
+    // gxde-kwin_x11 by the gxdewmshim KWin plugin. Without arguments the
+    // program string is split like a command line, as before.
+    callDBus("org.kde.KWin", "/GxdeWmShim", "com.gxde.KWinX11.WmShim", "StartDetached",
+             program, (arguments && arguments.length > 0) ? arguments : []);
 }
 
 function parseCommand(border) {

@@ -1,0 +1,21 @@
+{
+    "KPackageStructure": "KWin/Script",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "zccrs",
+                "Email": "zccrs@live.com"
+            }
+        ],
+        "Description": "A screen edge action with custom run command",
+        "EnabledByDefault": true,
+        "Icon": "preferences-system-windows-script-test",
+        "Id": "runcommandaction",
+        "License": "GPLv3",
+        "Name": "Custom Run Command",
+        "Version": "0.1"
+    },
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js",
+    "X-KWin-Border-Activate": true
+}

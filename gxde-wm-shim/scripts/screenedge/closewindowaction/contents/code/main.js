@@ -17,9 +17,11 @@ function init() {
 
         if (isFinite(border)) {
             var onBorderActive = function () {
+                var window = workspace.activeWindow;
                 // 热区快捷方式只允许关闭最大化窗口
-                if (workspace.activeClient.closeable && workspace.__dde__.kwinUtils.isFullMaximized(workspace.activeClient))
-                    workspace.activeClient.closeWindow();
+                // KWin 6: maximizeMode 3 is MaximizeFull (vertical | horizontal).
+                if (window && window.closeable && window.maximizeMode === 3)
+                    window.closeWindow();
             }
 
             registerScreenEdge(border, onBorderActive)

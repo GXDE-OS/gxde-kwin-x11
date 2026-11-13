@@ -209,6 +209,7 @@ private:
 
     bool m_isMultitaskingActived = false;
     bool m_isPlatformX11 = true;
+    bool m_reloadKWinConfigPending = false;
     bool m_isShowDesktop = false;
 };
 

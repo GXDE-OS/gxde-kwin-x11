@@ -12,6 +12,7 @@
 #include <QFileInfo>
 #include <QDBusReply>
 #include <QMetaEnum>
+#include <QTimer>
 
 #include <KF6/KConfigCore/KConfig>
 #include <KF6/KConfigCore/KConfigGroup>
@@ -1340,6 +1341,17 @@ void DeepinWMFaker::syncConfigForKWin()
 {
     // 同步配置到文件
     m_kwinConfig->sync();
+
+    // gxde-kwin_x11 does not watch its configuration file. Ask it to reload once
+    // per event loop iteration, so that e.g. the screen edge scripts pick up the
+    // hot zone settings without restarting KWin.
+    if (m_reloadKWinConfigPending)
+        return;
+    m_reloadKWinConfigPending = true;
+    QTimer::singleShot(0, this, [this] {
+        m_reloadKWinConfigPending = false;
+        QDBusConnection::sessionBus().send(QDBusMessage::createSignal(KWinDBusPath, "org.kde.KWin", "reloadConfig"));
+    });
 }
 
 void DeepinWMFaker::updateCursorConfig()

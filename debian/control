@@ -20,6 +20,7 @@ Build-Depends:
  libfontconfig-dev,
  libfreetype-dev,
  libgbm-dev,
+ libgsettings-qt6-dev,
  libgxde-decoration3-x11-dev (>= 6.8.4~),
  libgxde-nighttime-x11-dev (>= 6.8.4-2~) <!pkg.gxde-kwin-x11.no-nightlight>,
  libice-dev,
@@ -59,6 +60,7 @@ Build-Depends:
  libsystemd-dev,
  libudev-dev [linux-any],
  libwayland-dev (>= 1.22~),
+ libx11-dev,
  libx11-xcb-dev,
  libxcb-composite0-dev (>= 1.10~),
  libxcb-cursor-dev,
@@ -126,6 +128,8 @@ Depends:
  ${misc:Depends},
  ${nightlight:Depends},
  ${shlibs:Depends},
+Recommends:
+ gxde-desktop-schemas,
 Suggests:
  systemsettings,
 Description: isolated GXDE KWin window manager for X11
@@ -135,6 +139,10 @@ Description: isolated GXDE KWin window manager for X11
  to the distribution KWin packages.
  .
  It deliberately does not ship a KWin Wayland compositor executable.
+ .
+ It also contains the GXDE/Deepin window manager compatibility layer from
+ gxde-wm-shim: the com.deepin.wm D-Bus service used by the GXDE desktop, hot
+ zone and shortcut scripts, and GXDE default settings and window rules.
 
 Package: libgxde-kwin-x11-6
 Section: libs

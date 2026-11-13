@@ -1,10 +1,8 @@
-install(
-    DIRECTORY
-    screenedge/runcommandaction
-    screenedge/closewindowaction
-    ddeshortcuts
-    ddelaunchpad
-    gtkframe
-    DESTINATION
-    ${CMAKE_INSTALL_DATADIR}/kwin/scripts
-)
+foreach(script ${KWIN_SCRIPTS})
+    install(
+        DIRECTORY
+        ${script}
+        DESTINATION
+        ${KWIN_SCRIPTS_INSTALL_DIR}
+    )
+endforeach()

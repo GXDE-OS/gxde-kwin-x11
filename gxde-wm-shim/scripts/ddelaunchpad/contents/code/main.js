@@ -2,49 +2,44 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+// Ported to gxde-kwin_x11 (KWin 6 scripting API): geometry is frameGeometry,
+// clientAdded/clientList are windowAdded/windowList, and geometries are
+// value types that must not be modified in place.
 function rectContains(rect1, rect2)
 {
-    rect1.right = rect1.x + rect1.width - 1;
-    rect1.bottom = rect1.y + rect1.height - 1;
-    rect2.right = rect2.x + rect2.width - 1;
-    rect2.bottom = rect2.y + rect2.height - 1;
-
     if (rect1.x != rect2.x)
         return false;
     if (rect1.y != rect2.y)
         return false;
-    if (rect1.right != rect2.right)
+    if (rect1.x + rect1.width != rect2.x + rect2.width)
         return false;
-    if (rect1.bottom != rect2.bottom)
+    if (rect1.y + rect1.height != rect2.y + rect2.height)
         return false;
 
     return true;
 }
 
 function forceFullScreen(client) {
-    var newGeometry = client.geometry;
-    var screen = client.screen;
-    var screenGeometry = workspace.clientArea(KWin.ScreenArea, screen, 0);
+    var newGeometry = client.frameGeometry;
+    var screenGeometry = workspace.clientArea(KWin.ScreenArea, client);
 
     if (!rectContains(screenGeometry, newGeometry)) {
-        newGeometry = screenGeometry;
-        client.geometry = newGeometry;
-        workspace.updateWindowGeometry(client, screenGeometry);
+        client.frameGeometry = screenGeometry;
     }
 }
 
 function setupConnection(client) {
     if (client.caption == "Fullscreen Launchpad") {
         forceFullScreen(client)
-        client.geometryChanged.connect(client, function () {
-            forceFullScreen(this);
+        client.frameGeometryChanged.connect(function () {
+            forceFullScreen(client);
         });
     }
 }
 
-workspace.clientAdded.connect(setupConnection);
+workspace.windowAdded.connect(setupConnection);
 // connect all existing clients
-var clients = workspace.clientList();
+var clients = workspace.windowList();
 for (var i=0; i<clients.length; i++) {
     setupConnection(clients[i]);
 }

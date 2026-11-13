@@ -18,6 +18,24 @@ of KNightTime, which is not available for this distribution. Its scheduling
 service is D-Bus activated as com.gxde.NightTimeX11. Building with the
 pkg.gxde-kwin-x11.no-nightlight profile disables Night Light entirely.
 
+The GXDE/Deepin window manager compatibility layer from gxde-wm-shim
+(gxde-wm-shim/ in this source, see debian/copyright) is built into this
+package, in this project's namespace so that it can coexist with the
+gxde-wm-shim package of the existing window manager:
+
+ - The com.deepin.wm service is gxde-kwin_x11-wm-dbus in libexec. It is not
+   D-Bus activated: the gxdewmshim KWin plugin starts it in GXDE, Deepin and
+   DDE sessions (XDG_CURRENT_DESKTOP) and stops it together with KWin. Set
+   GXDE_KWIN_X11_WM_SHIM=1 or =0 to force it on or off.
+ - Its defaults are installed as /etc/xdg/gxde-kwin_x11rc and
+   /etc/xdg/gxde-kwin_x11rulesrc. The shared kglobalshortcutsrc, klaunchrc and
+   kdeglobals files are not installed, nor are deepin-kwin's DConfig
+   descriptions or the kwin_no_scale wrapper.
+ - The hot zone and shortcut scripts are ported to the KWin 6 scripting API.
+   workspace.__dde__ only existed in deepin-kwin; the run command action uses
+   the StartDetached method of the gxdewmshim plugin instead. The gtkframe
+   script is not installed because KWin handles _GTK_FRAME_EXTENTS itself.
+
 The source still compiles shared Wayland protocol and support code used by the
 KWin core library. This is not a Wayland compositor build: neither
 kwin_wayland nor gxde-kwin_wayland is a CMake target or an installed file.

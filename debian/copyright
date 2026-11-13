@@ -25,4 +25,36 @@ The complete corresponding license texts are included in the source under
 LICENSES/. On Debian systems, the GNU GPL and LGPL texts are also available
 under /usr/share/common-licenses/.
 
+gxde-wm-shim/
+-------------
+
+The gxde-wm-shim/ directory is imported with its full history from the
+catos-kwin-x11-integration branch of gxde-wm-shim, which is based on deepin's
+dde-kwin:
+
+  GXDE fork: https://github.com/GXDE-OS/gxde-wm-shim
+  Upstream:  https://github.com/linuxdeepin/dde-kwin
+
+It keeps its own licensing, declared in gxde-wm-shim/REUSE.toml and with the
+license texts in gxde-wm-shim/LICENSES/:
+
+  GPL-3.0-or-later   sources, scripts, configuration and packaging
+  CC-BY-4.0          documentation (*.md)
+  CC0-1.0            CI configuration
+
+Copyright holders, as recorded in its source and history:
+
+  2017 Deepin.Inc <support@deepin.com>
+  2018-2024 UnionTech Software Technology Co., Ltd.
+  2025-2026 gfdgd_xi <3025613752@qq.com>
+  2026 Aromatic <symwww@outlook.com>
+
+The KWin scripts were written by zccrs <zccrs@live.com> and justforlxz
+<lxz@mkacg.com>, see their metadata.json. Every other contributor is listed in
+the git history of this source (git log af2f13c393^2).
+
+The compatibility helper built from gxde-wm-shim/deepin-wm-dbus/ is a separate
+program. It is not linked with the KWin libraries, which remain under the
+licenses listed above.
+
 The Debian packaging files may be redistributed under GPL-2.0-or-later.
