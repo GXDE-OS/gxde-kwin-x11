@@ -62,6 +62,7 @@ dde_kwin_default(DEEPIN_WM_DBUS_INTERFACE_DIR "${CMAKE_INSTALL_DATADIR}/dbus-1/i
 dde_kwin_default(DEEPIN_WM_DBUS_SHORTCUTS_DIR "${CMAKE_INSTALL_DATADIR}/gxde-wm-dbus")
 dde_kwin_default(KWIN_SCRIPTS_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/kwin/scripts")
 dde_kwin_default(KWIN_SCRIPTS screenedge/runcommandaction screenedge/closewindowaction ddeshortcuts ddelaunchpad gtkframe)
+dde_kwin_default(INSTALL_KWIN_CONFIG ON)
 dde_kwin_default(KWIN_CONFIG_FILE "kwinrc")
 dde_kwin_default(KWIN_RULES_CONFIG_FILE "kwinrulesrc")
 dde_kwin_default(INSTALL_KDE_GLOBAL_CONFIGS ON)

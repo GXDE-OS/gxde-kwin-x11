@@ -665,6 +665,9 @@ if (GXDE_KWIN_BUILD_WM_SHIM)
     # gtkframe needs deepin-kwin's workspace.__dde__ object; KWin handles
     # _GTK_FRAME_EXTENTS natively.
     set(KWIN_SCRIPTS ddelaunchpad ddeshortcuts screenedge/closewindowaction screenedge/runcommandaction)
+    # gxde-kwin_x11 installs its own defaults, following deepin-kwin
+    # (data/gxde-kwin_x11rc).
+    set(INSTALL_KWIN_CONFIG OFF)
     set(KWIN_CONFIG_FILE "${KWIN_CONFIG}")
     set(KWIN_RULES_CONFIG_FILE "${KWIN_RULES_CONFIG}")
     # kglobalshortcutsrc, klaunchrc and kdeglobals are shared with every KDE

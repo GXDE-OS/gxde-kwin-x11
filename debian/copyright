@@ -57,4 +57,13 @@ The compatibility helper built from util/gxde-wm-shim/deepin-wm-dbus/ is a
 separate program. It is not linked with the KWin libraries, which remain under
 the licenses listed above.
 
+data/gxde-kwin_x11rc
+--------------------
+
+The default settings installed as /etc/xdg/gxde-kwin_x11rc follow
+/etc/xdg/deepin-kwinrc of deepin-kwin (GXDE package gxde-kwin-data):
+
+  Copyright: UnionTech Software Technology Co., Ltd.
+  License:   GPL-2.0-or-later
+
 The Debian packaging files may be redistributed under GPL-2.0-or-later.

@@ -27,14 +27,21 @@ gxde-wm-shim package of the existing window manager:
    D-Bus activated: the gxdewmshim KWin plugin starts it in GXDE, Deepin and
    DDE sessions (XDG_CURRENT_DESKTOP) and stops it together with KWin. Set
    GXDE_KWIN_X11_WM_SHIM=1 or =0 to force it on or off.
- - Its defaults are installed as /etc/xdg/gxde-kwin_x11rc and
-   /etc/xdg/gxde-kwin_x11rulesrc. The shared kglobalshortcutsrc, klaunchrc and
-   kdeglobals files are not installed, nor are deepin-kwin's DConfig
-   descriptions or the kwin_no_scale wrapper.
+ - Its window rules are installed as /etc/xdg/gxde-kwin_x11rulesrc. The shared
+   kglobalshortcutsrc, klaunchrc and kdeglobals files are not installed, nor
+   are its kwinrc, deepin-kwin's DConfig descriptions or the kwin_no_scale
+   wrapper.
  - The hot zone and shortcut scripts are ported to the KWin 6 scripting API.
    workspace.__dde__ only existed in deepin-kwin; the run command action uses
    the StartDetached method of the gxdewmshim plugin instead. The gtkframe
    script is not installed because KWin handles _GTK_FRAME_EXTENTS itself.
+
+The default settings in /etc/xdg/gxde-kwin_x11rc follow deepin-kwin, the
+existing GXDE window manager (/etc/xdg/deepin-kwinrc of gxde-kwin-data). Effect
+keys whose plugin id changed in KWin 6 are renamed, for example
+kwin4_effect_fadeEnabled is now fadeEnabled. Blur is enabled explicitly, which
+also matters on software rendering (llvmpipe), where KWin otherwise leaves it
+off.
 
 The gxde-experimental-x11-session package adds the GXDE-experimental-x11
 login session. Like the regular GXDE session it runs startdde, which starts

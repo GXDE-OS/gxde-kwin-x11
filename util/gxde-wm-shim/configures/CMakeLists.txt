@@ -1,6 +1,8 @@
 option(USE_KWIN_NO_SCALE "use deepin LD_PRELOAD kwin_no_scale" ON) # deepin v25 don't need kwin_no_scale
 
-install(FILES kwinrc DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/xdg" RENAME "${KWIN_CONFIG_FILE}")
+if (INSTALL_KWIN_CONFIG)
+    install(FILES kwinrc DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/xdg" RENAME "${KWIN_CONFIG_FILE}")
+endif()
 install(FILES kwinrulesrc DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/xdg" RENAME "${KWIN_RULES_CONFIG_FILE}")
 
 if (INSTALL_KDE_GLOBAL_CONFIGS)
