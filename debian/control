@@ -21,7 +21,7 @@ Build-Depends:
  libfreetype-dev,
  libgbm-dev,
  libgxde-decoration3-x11-dev (>= 6.8.4~),
- libgxde-nighttime-x11-dev (>= 6.8.4~) <!pkg.gxde-kwin-x11.no-nightlight>,
+ libgxde-nighttime-x11-dev (>= 6.8.4-2~) <!pkg.gxde-kwin-x11.no-nightlight>,
  libice-dev,
  libinput-dev,
  libkf6auth-dev (>= 6.13.0~),

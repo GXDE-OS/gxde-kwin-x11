@@ -14,13 +14,15 @@
 #include "plugin.h"
 
 #include <KConfigWatcher>
+// Provided by KCoreAddons >= 6.15, or by gxde-nighttime-x11 on older KF6. The
+// latter is a using-declaration, so the class cannot be forward declared.
+#include <KSystemClockSkewNotifier>
 
 #include <QDateTime>
 #include <QObject>
 #include <QPair>
 
 class KDarkLightScheduleProvider;
-class KSystemClockSkewNotifier;
 class NightLightState;
 class QTimer;
 
