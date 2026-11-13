@@ -1,49 +1,125 @@
-# gxde-kwin_x11
+<a id="readme-top"></a>
 
-This repository is the GXDE X11-only fork of KWin. The CMake project, main
-executable, and shared library are named `gxde-kwin_x11`. Runtime data,
-plugins, configuration (`gxde-kwin_x11rc`), translations, documentation,
-KCMs, helpers, and CMake packages use separate GXDE namespaces so the fork can
-be installed alongside upstream KWin.
+<div align="center">
+  <a href="https://github.com/GXDE-OS/gxde-kwin-x11">
+    <img src="logo.png" alt="GXDE KWin X11 logo" width="96" height="96">
+  </a>
 
-The build intentionally has no `gxde-kwin_wayland` (or `kwin_wayland`)
-compositor target. Wayland protocol code that the X11 implementation needs
-internally is still compiled; it does not produce a Wayland compositor
-executable.
+  <h1 align="center">GXDE KWin X11</h1>
 
-The session service is installed as `plasma-gxde-kwin_x11.service`. It keeps
-the standard `org.kde.KWin` D-Bus API for desktop-shell compatibility and
-conflicts with the upstream KWin session services, because two window managers
-cannot control the same display at the same time.
+  <p align="center">
+    An X11-only fork of KDE KWin for the GXDE desktop environment.
+    <br />
+    <a href="https://github.com/GXDE-OS/gxde-kwin-x11/issues">Report a bug</a>
+    &middot;
+    <a href="https://github.com/GXDE-OS/gxde-kwin-x11/issues">Request a feature</a>
+    &middot;
+    <a href="README.zh.md">简体中文</a>
+  </p>
+</div>
 
-## About KWin/X11
+[![GitHub stars](https://img.shields.io/github/stars/GXDE-OS/gxde-kwin-x11?style=for-the-badge)](https://github.com/GXDE-OS/gxde-kwin-x11/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/GXDE-OS/gxde-kwin-x11?style=for-the-badge)](https://github.com/GXDE-OS/gxde-kwin-x11/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/GXDE-OS/gxde-kwin-x11?style=for-the-badge)](https://github.com/GXDE-OS/gxde-kwin-x11/issues)
+[![C++](https://img.shields.io/badge/C%2B%2B-23-00599C?style=for-the-badge&logo=cplusplus&logoColor=white)](https://isocpp.org/)
+[![CMake](https://img.shields.io/badge/CMake-3.16%2B-064F8C?style=for-the-badge&logo=cmake&logoColor=white)](https://cmake.org/)
 
-KWin/X11 is an X11 window manager and a compositing manager. Its primary usage is in conjunction with a Desktop Shell (e.g. KDE Plasma Desktop). KWin/X11 is designed to go out of the way; users should not notice that they use a window manager at all. Nevertheless KWin/X11 provides a steep learning curve for advanced features, which are available, if they do not conflict with the primary mission. KWin does not have a dedicated targeted user group, but follows the targeted user group of the Desktop Shell using KWin/X11 as it's window manager.
+## Table of Contents
 
-## KWin is not...
+- [About the Project](#about-the-project)
+- [Key Differences](#key-differences)
+- [Built With](#built-with)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
- * a standalone window manager (c.f. openbox, i3) and does not provide any functionality belonging to a Desktop Shell.
- * a replacement for window managers designed for use with a specific Desktop Shell (e.g. GNOME Shell)
- * a minimalistic window manager
- * designed for use without compositing or for X11 network transparency, though both are possible.
+## About the Project
 
-# Contributing to KWin
+GXDE KWin X11 is the GXDE fork of [KWin](https://invent.kde.org/plasma/kwin), KDE's window manager and compositing manager. It is intended to integrate with the GXDE desktop while preserving the standard `org.kde.KWin` D-Bus API for desktop-shell compatibility.
 
-Please refer to the [contributing document](CONTRIBUTING.md) for everything you need to know to get started contributing to KWin.
+This project focuses exclusively on X11. It provides the window manager, compositor, effects, configuration modules, plugins, and supporting runtime components required by an X11 desktop session.
 
-# Contacting KWin development team
+## Key Differences
 
- * mailing list: [kwin@kde.org](https://mail.kde.org/mailman/listinfo/kwin)
- * IRC: #kde-kwin on irc.libera.chat
- * Matrix: [#kwin:kde.org](https://go.kde.org/matrix/#/#kwin:kde.org)
+- The project and main executable are named `gxde-kwin_x11`.
+- Runtime data, plugins, configuration, translations, documentation, KCMs, helpers, and CMake packages use GXDE-specific namespaces.
+- The session service is installed as `plasma-gxde-kwin_x11.service`.
+- The fork does not build a `gxde-kwin_wayland` or `kwin_wayland` compositor executable.
+- The standard `org.kde.KWin` D-Bus API is retained for compatibility with desktop shells.
 
-# Support
-## Application Developer
-If you are an application developer having questions regarding windowing systems (either X11 or Wayland) please do not hesitate to contact us. Preferable through our mailing list. Ideally subscribe to the mailing list, so that your mail doesn't get stuck in the moderation queue.
+## Built With
 
-## End user
-Please contact the support channels of your Linux distribution for user support. The KWin development team does not provide end user support.
+- [C++23](https://isocpp.org/)
+- [CMake](https://cmake.org/)
+- [Qt 6](https://www.qt.io/)
+- [KDE Frameworks](https://kde.org/products/frameworks/)
+- [KDE Plasma Workspace](https://invent.kde.org/plasma/plasma-workspace)
+- [X11](https://www.x.org/)
 
-# Reporting bugs
+## Getting Started
 
-Please use [KDE's bugtracker](https://bugs.kde.org) and report for [product KWin](https://bugs.kde.org/enter_bug.cgi?product=kwin).
+### Prerequisites
+
+The project currently requires:
+
+- A C++23-compatible compiler
+- CMake 3.16 or newer
+- Qt 6.8.0 or newer
+- Plasma workspace dependencies 6.3.0 or newer
+- The development packages required by KWin, Qt, KDE Frameworks, and X11 for your distribution
+
+### Build from Source
+
+```bash
+git clone https://github.com/GXDE-OS/gxde-kwin-x11.git
+cd gxde-kwin-x11
+mkdir _build
+cd _build
+cmake ..
+cmake --build . --parallel
+```
+
+For a development installation, use the standard CMake install workflow for your distribution. Refer to [`CONTRIBUTING.md`](CONTRIBUTING.md) for running the compositor directly from a build directory, debugging, and testing guidance.
+
+## Usage
+
+After installation, the X11 compositor executable is:
+
+```bash
+gxde-kwin_x11
+```
+
+The GXDE session service is:
+
+```text
+plasma-gxde-kwin_x11.service
+```
+
+When running from a build directory, follow the environment setup in [`CONTRIBUTING.md`](CONTRIBUTING.md), including the isolated `QT_PLUGIN_PATH`. Do not run two window managers against the same display at the same time.
+
+## Contributing
+
+Contributions are welcome. Before making changes, please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for:
+
+- Repository layout and useful source directories
+- KDE and KWin coding conventions
+- Commit message guidance
+- Building and running from source
+- Test and debugging practices
+
+Please use GitHub issues for project-specific bug reports and feature requests. For upstream KWin topics, consult the [KDE Bugzilla KWin product](https://bugs.kde.org/enter_bug.cgi?product=kwin) and the [KWin Matrix room](https://matrix.to/#/#kwin:kde.org).
+
+## License
+
+This repository contains components under multiple free and open-source licenses. See the files in [`LICENSES/`](LICENSES/) for the applicable license texts and individual source-file headers for licensing details.
+
+## Acknowledgments
+
+- [KWin](https://invent.kde.org/plasma/kwin), the upstream KDE window manager
+- [KDE](https://kde.org/) and its contributors
+- [GXDE](https://github.com/GXDE-OS) and its contributors
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template), which inspired this README structure
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
