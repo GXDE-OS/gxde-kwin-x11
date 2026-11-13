@@ -17,7 +17,7 @@ namespace KWin
 {
 
 /**
- * Integrates gxde-wm-shim (gxde-wm-shim/ in this source tree) with gxde-kwin_x11.
+ * Integrates gxde-wm-shim (util/gxde-wm-shim/ in this source tree) with gxde-kwin_x11.
  *
  * - Starts the com.deepin.wm compatibility helper in GXDE sessions and stops it
  *   together with KWin. The helper is deliberately not D-Bus activated, so it

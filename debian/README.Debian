@@ -19,7 +19,7 @@ service is D-Bus activated as com.gxde.NightTimeX11. Building with the
 pkg.gxde-kwin-x11.no-nightlight profile disables Night Light entirely.
 
 The GXDE/Deepin window manager compatibility layer from gxde-wm-shim
-(gxde-wm-shim/ in this source, see debian/copyright) is built into this
+(util/gxde-wm-shim/ in this source, see debian/copyright) is built into this
 package, in this project's namespace so that it can coexist with the
 gxde-wm-shim package of the existing window manager:
 

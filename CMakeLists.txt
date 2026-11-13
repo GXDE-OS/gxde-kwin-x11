@@ -98,7 +98,7 @@ option(KWIN_BUILD_X11_BACKEND "Enable building gxde-kwin_x11" ON)
 option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 option(KWIN_BUILD_NIGHTLIGHT "Enable building of KWin with nightlight support" ON)
-option(GXDE_KWIN_BUILD_WM_SHIM "Build the GXDE/Deepin window manager compatibility layer from gxde-wm-shim/" ON)
+option(GXDE_KWIN_BUILD_WM_SHIM "Build the GXDE/Deepin window manager compatibility layer from util/gxde-wm-shim/" ON)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
@@ -616,9 +616,9 @@ add_subdirectory(kconf_update)
 add_subdirectory(src)
 
 if (GXDE_KWIN_BUILD_WM_SHIM)
-    # gxde-wm-shim/ is imported from https://github.com/GXDE-OS/gxde-wm-shim
+    # util/gxde-wm-shim/ is imported from https://github.com/GXDE-OS/gxde-wm-shim
     # (catos-kwin-x11-integration) and keeps its own licensing, see
-    # gxde-wm-shim/REUSE.toml. Install it into this project's namespace so that
+    # util/gxde-wm-shim/REUSE.toml. Install it into this project's namespace so that
     # it can coexist with the gxde-wm-shim package of the existing GXDE window
     # manager: the helper is started by the gxdewmshim KWin plugin instead of
     # D-Bus activation, and the configuration targets gxde-kwin_x11.
@@ -643,7 +643,7 @@ if (GXDE_KWIN_BUILD_WM_SHIM)
     set(INSTALL_DEEPIN_KWIN_DCONFIG OFF)
     # The GXDE X11 Exp session provides its own kwin_no_scale wrapper.
     set(USE_KWIN_NO_SCALE OFF)
-    add_subdirectory(gxde-wm-shim)
+    add_subdirectory(util/gxde-wm-shim)
 endif()
 
 # This fork intentionally ships only the standalone X11 window-manager
@@ -667,7 +667,7 @@ endif()
 # add clang-format target for all our real source files
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
 # Keep the imported gxde-wm-shim sources in their authors' formatting.
-list(FILTER ALL_CLANG_FORMAT_SOURCE_FILES EXCLUDE REGEX "/gxde-wm-shim/")
+list(FILTER ALL_CLANG_FORMAT_SOURCE_FILES EXCLUDE REGEX "/util/gxde-wm-shim/")
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 
