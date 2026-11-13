@@ -1,0 +1,15 @@
+etc/xdg/kdeglobals
+etc/xdg/kglobalshortcutsrc
+etc/xdg/klaunchrc
+etc/xdg/kwinrc
+etc/xdg/kwinrulesrc
+#usr/lib/*/*.so.*
+#usr/lib/*/qt5
+usr/share/kwin/scripts
+usr/share/deepin-log-viewer/deepin-log.conf.d/org.deepin.kwin.json
+usr/share/dsg/configs/org.kde.kwin/*.json
+usr/share/dsg/configs/org.kde.kwin.decoration/org.kde.kwin.decoration.titlebar.json
+usr/bin/kwin_no_scale
+usr/bin/deepin-wm-dbus
+usr/share/dbus-1/interfaces
+usr/share/dbus-1/services/com.deepin.wm.service

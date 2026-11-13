@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ -n "$HOME" ];then
+    if [ "$(grep -r deepin-kwin $HOME/.config/kglobalshortcutsrc)" != "" ]; then
+        # 如果是原先旧 deepin-kwin 的配置文件，则需要替换为新的，不然快捷方式无法使用
+        cp /etc/xdg/kglobalshortcutsrc $HOME/.config/kglobalshortcutsrc
+    fi
+    cp -n /etc/xdg/kglobalshortcutsrc $HOME/.config/kglobalshortcutsrc
+fi
+
+EXECUTE_PATH=$(cd `dirname $0`; pwd)
+# 启用快捷键
+setsid /usr/lib/*/libexec/kglobalacceld &
+# 禁用没有什么意义的动画
+dde-dconfig set org.kde.kwin -r org.kde.kwin.compositing user_type -v 2
+# 设置 dtk5 应用圆角
+radius=$(dbus-send --print-reply=literal --session --dest=com.gxde.daemon.personalization /com/gxde/daemon/personalization com.gxde.daemon.personalization.Radius | awk '/int32/ {print $2}')
+/usr/libexec/dtk5/DGui/bin/deepin-gui-settings --set "DTK/WindowRadius" -i "$radius"
+kwin_x11 :appFilePath=$EXECUTE_PATH/kwin_no_scale $@
