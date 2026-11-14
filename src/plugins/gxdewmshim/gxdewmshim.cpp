@@ -7,10 +7,14 @@
 #include "gxdewmshim.h"
 
 #include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusReply>
 #include <QFileInfo>
 #include <QLoggingCategory>
 #include <QProcess>
 #include <QTimer>
+
+#include <signal.h>
 
 Q_LOGGING_CATEGORY(KWIN_GXDEWMSHIM, "kwin_gxdewmshim", QtWarningMsg)
 
@@ -22,6 +26,12 @@ static const QString s_dbusPath = QStringLiteral("/GxdeWmShim");
 // deepin-wm-dbus returns -1 when com.deepin.wm already has an owner.
 static constexpr int s_helperNameTakenExitCode = 255;
 static constexpr int s_maxHelperRestarts = 5;
+static constexpr int s_maxLegacyReplacements = 3;
+
+static const QString s_wmService = QStringLiteral("com.deepin.wm");
+// deepin-wm-dbus of the KWin 5 based window manager (package gxde-wm-shim). It
+// configures that KWin (kwinrc), so it must not serve this session.
+static const QString s_legacyHelper = QStringLiteral("/usr/bin/deepin-wm-dbus");
 
 GxdeWmShim::GxdeWmShim()
 {
@@ -67,7 +77,7 @@ bool GxdeWmShim::isEnabledForSession()
     return false;
 }
 
-void GxdeWmShim::startHelper()
+void GxdeWmShim::startHelper(bool queue)
 {
     const QString program = QStringLiteral(GXDE_WM_DBUS_HELPER);
     if (!QFileInfo(program).isExecutable()) {
@@ -82,13 +92,13 @@ void GxdeWmShim::startHelper()
             handleHelperFinished(exitCode, exitStatus);
         });
     }
-    m_helper->start(program, {});
+    m_helper->start(program, queue ? QStringList{QStringLiteral("--queue")} : QStringList{});
 }
 
 void GxdeWmShim::handleHelperFinished(int exitCode, int exitStatus)
 {
     if (exitStatus == QProcess::NormalExit && exitCode == s_helperNameTakenExitCode) {
-        qCWarning(KWIN_GXDEWMSHIM) << "com.deepin.wm is owned by another process, not starting the compatibility helper";
+        replaceLegacyHelper();
         return;
     }
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
@@ -101,7 +111,41 @@ void GxdeWmShim::handleHelperFinished(int exitCode, int exitStatus)
 
     ++m_restarts;
     qCWarning(KWIN_GXDEWMSHIM) << "Window manager compatibility helper exited unexpectedly, restarting" << exitCode << exitStatus;
-    QTimer::singleShot(1000 * m_restarts, this, &GxdeWmShim::startHelper);
+    QTimer::singleShot(1000 * m_restarts, this, [this]() {
+        startHelper();
+    });
+}
+
+void GxdeWmShim::replaceLegacyHelper()
+{
+    QDBusConnectionInterface *bus = QDBusConnection::sessionBus().interface();
+    const QDBusReply<uint> pid = bus->servicePid(s_wmService);
+    if (!pid.isValid()) {
+        // The owner went away in the meantime.
+        QTimer::singleShot(0, this, [this]() {
+            startHelper();
+        });
+        return;
+    }
+
+    const QString executable = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid.value())).symLinkTarget();
+    if (executable != s_legacyHelper) {
+        qCWarning(KWIN_GXDEWMSHIM) << "com.deepin.wm is owned by" << executable << "- not starting the compatibility helper";
+        return;
+    }
+    if (m_replacements >= s_maxLegacyReplacements) {
+        qCWarning(KWIN_GXDEWMSHIM) << "deepin-wm-dbus keeps taking com.deepin.wm, giving up";
+        return;
+    }
+    ++m_replacements;
+
+    // Queue our helper for the name first: the bus hands it over as soon as
+    // deepin-wm-dbus exits, before anything can activate that one again.
+    qCInfo(KWIN_GXDEWMSHIM) << "Replacing the deepin-wm-dbus of the KWin 5 window manager, pid" << pid.value();
+    startHelper(true);
+    QTimer::singleShot(500, this, [pid = pid_t(pid.value())]() {
+        ::kill(pid, SIGTERM);
+    });
 }
 
 bool GxdeWmShim::StartDetached(const QString &program, const QVariantList &arguments)

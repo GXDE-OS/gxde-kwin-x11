@@ -22,6 +22,8 @@ namespace KWin
  * - Starts the com.deepin.wm compatibility helper in GXDE sessions and stops it
  *   together with KWin. The helper is deliberately not D-Bus activated, so it
  *   can coexist with the deepin-wm-dbus of the existing GXDE window manager.
+ *   That one is D-Bus activated, and takes com.deepin.wm whenever our helper is
+ *   not running, e.g. after KWin restarted; it is then replaced.
  * - Exports StartDetached() for the ported screen edge scripts, replacing the
  *   workspace.__dde__.startDetached() helper that only deepin-kwin provided.
  */
@@ -40,11 +42,13 @@ public Q_SLOTS:
 
 private:
     static bool isEnabledForSession();
-    void startHelper();
+    void startHelper(bool queue = false);
     void handleHelperFinished(int exitCode, int exitStatus);
+    void replaceLegacyHelper();
 
     QProcess *m_helper = nullptr;
     int m_restarts = 0;
+    int m_replacements = 0;
 };
 
 } // namespace KWin
