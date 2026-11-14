@@ -787,6 +787,13 @@ void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
             updateShadow();
         } else if (e->atom == atoms->kde_skip_close_animation) {
             getSkipCloseAnimation();
+        } else if (e->atom == atoms->deepin_no_titlebar) {
+            readDeepinNoTitlebar();
+        } else if (e->atom == atoms->xsettings_settings) {
+            readDeepinWindowTheme();
+        } else if (e->atom == atoms->deepin_force_decorate) {
+            readDeepinForceDecorate();
+            updateDeepinForceDecorate();
         }
         break;
     }

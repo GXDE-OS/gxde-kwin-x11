@@ -82,6 +82,13 @@ public:
     Xcb::Atom primary;
     Xcb::Atom edid;
     Xcb::Atom xwayland_allow_commits;
+    // Deepin window manager extensions, as in deepin-kwin's chameleon
+    Xcb::Atom deepin_chameleon;
+    Xcb::Atom deepin_no_titlebar;
+    Xcb::Atom deepin_force_decorate;
+    Xcb::Atom deepin_scissor_window;
+    // Per-window settings of DTK windows (dxcb), in the XSETTINGS format
+    Xcb::Atom xsettings_settings;
 
     /**
      * @internal

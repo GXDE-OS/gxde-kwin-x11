@@ -173,6 +173,24 @@ public:
 
     bool userNoBorder() const;
     bool noBorder() const override;
+
+    /**
+     * Whether the client set _DEEPIN_NO_TITLEBAR: it draws its own title bar and
+     * wants a decoration that only provides the border and the shadow.
+     */
+    bool isDeepinNoTitlebar() const;
+    /**
+     * Re-evaluates the border after support for the Deepin decoration
+     * extensions was announced or withdrawn.
+     */
+    void updateDeepinForceDecorate();
+    /**
+     * Decoration theme of a DTK window in no-titlebar mode, as published by
+     * dxcb in the _XSETTINGS_SETTINGS property of the window: windowRadius,
+     * borderWidth, borderColor, shadowRadius, shadowOffset, shadowColor,
+     * mouseInputAreaMargins and theme. Empty for other windows.
+     */
+    QVariantMap deepinWindowTheme() const;
     void setNoBorder(bool set) override;
     bool userCanSetNoBorder() const override;
     void checkNoBorder() override;
@@ -358,8 +376,15 @@ protected:
 
 Q_SIGNALS:
     void shapeChanged();
+    void deepinNoTitlebarChanged();
+    void deepinWindowThemeChanged();
 
 private:
+    void readDeepinNoTitlebar();
+    void readDeepinForceDecorate();
+    void readDeepinWindowTheme();
+    bool deepinForceDecorateApplies() const;
+    bool motifRequestsNoBorder() const;
     void exportMappingState(int s); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
     bool isManaged() const; ///< Returns false if this client is not yet managed
     void updateAllowedActions(bool force = false);
@@ -485,6 +510,9 @@ private:
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     bool blocks_compositing;
     bool is_shape = false;
+    bool m_deepinNoTitlebar = false;
+    bool m_deepinForceDecorate = false;
+    QVariantMap m_deepinWindowTheme;
 
     enum FullScreenMode {
         FullScreenNone,

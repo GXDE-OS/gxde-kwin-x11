@@ -4,6 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "previewbridge.h"
+#include "config-kwin.h"
 #include "previewclient.h"
 #include "previewitem.h"
 #include "previewsettings.h"
@@ -34,6 +35,9 @@ namespace Preview
 {
 
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration3");
+// gxde-kwin_x11 keeps its decoration plugins out of the shared namespace, see
+// DecorationBridge.
+static const QString s_pluginNamespace = KWIN_PLUGINDIR + QLatin1Char('/') + s_pluginName;
 static const QString s_kcmName = QStringLiteral("org.kde.kdecoration3.kcm");
 
 PreviewBridge::PreviewBridge(QObject *parent)
@@ -123,7 +127,7 @@ void PreviewBridge::createFactory()
         return;
     }
 
-    const auto offers = KPluginMetaData::findPlugins(s_pluginName);
+    const auto offers = KPluginMetaData::findPlugins(s_pluginNamespace);
     auto item = std::find_if(offers.constBegin(), offers.constEnd(), [this](const auto &plugin) {
         return plugin.pluginId() == m_plugin;
     });

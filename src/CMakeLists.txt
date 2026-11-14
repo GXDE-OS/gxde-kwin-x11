@@ -281,6 +281,7 @@ if (KWIN_BUILD_X11)
             atoms.cpp
             events.cpp
             compositor_x11.cpp
+            gxdexsettings.cpp
             group.cpp
             moving_client_x11_filter.cpp
             netinfo.cpp

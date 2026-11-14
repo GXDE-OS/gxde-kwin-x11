@@ -19,6 +19,8 @@
 
 #include <NETWM>
 
+#include <QList>
+
 #include <memory>
 #include <xcb/xcb.h>
 
@@ -42,6 +44,22 @@ public:
 
     void setActiveClient(Window *client);
 
+    /**
+     * Hides NETRootInfo::activate(), which replaces _NET_SUPPORTED, so that
+     * the atoms added with setExtraSupported() are written again afterwards.
+     */
+    void activate();
+
+    /**
+     * Adds @p atom to, or removes it from, _NET_SUPPORTED on top of the
+     * properties NETRootInfo manages. GXDE uses it for the Deepin extensions
+     * that only hold while a feature is active, such as _DEEPIN_NO_TITLEBAR,
+     * which depends on the loaded decoration. It may be called before the
+     * root info exists; the atom is then announced when it is activated.
+     */
+    static void setExtraSupported(xcb_atom_t atom, bool supported);
+    static bool isExtraSupported(xcb_atom_t atom);
+
 protected:
     void changeNumberOfDesktops(int n) override;
     void changeCurrentDesktop(int d) override;
@@ -55,7 +73,11 @@ protected:
     void changeShowingDesktop(bool showing) override;
 
 private:
+    static void writeExtraSupported();
+
     static std::unique_ptr<RootInfo> s_self;
+    static QList<xcb_atom_t> s_extraSupported;
+    static QList<xcb_atom_t> s_removedExtraSupported;
     friend RootInfo *rootInfo();
 
     xcb_window_t m_activeWindow;

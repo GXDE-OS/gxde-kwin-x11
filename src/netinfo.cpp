@@ -23,6 +23,65 @@ namespace KWin
 {
 
 std::unique_ptr<RootInfo> RootInfo::s_self;
+QList<xcb_atom_t> RootInfo::s_extraSupported;
+QList<xcb_atom_t> RootInfo::s_removedExtraSupported;
+
+void RootInfo::setExtraSupported(xcb_atom_t atom, bool supported)
+{
+    if (atom == XCB_ATOM_NONE) {
+        return;
+    }
+    if (supported) {
+        if (s_extraSupported.contains(atom)) {
+            return;
+        }
+        s_extraSupported.append(atom);
+        s_removedExtraSupported.removeAll(atom);
+    } else {
+        if (s_extraSupported.removeAll(atom) == 0) {
+            return;
+        }
+        s_removedExtraSupported.append(atom);
+    }
+    writeExtraSupported();
+}
+
+bool RootInfo::isExtraSupported(xcb_atom_t atom)
+{
+    return atom != XCB_ATOM_NONE && s_extraSupported.contains(atom);
+}
+
+void RootInfo::writeExtraSupported()
+{
+    if (!s_self || (s_extraSupported.isEmpty() && s_removedExtraSupported.isEmpty())) {
+        return;
+    }
+
+    xcb_connection_t *connection = kwinApp()->x11Connection();
+    const xcb_window_t root = kwinApp()->x11RootWindow();
+    const Xcb::Atom netSupported(QByteArrayLiteral("_NET_SUPPORTED"), false, connection);
+    Xcb::Property property(false, root, netSupported, XCB_ATOM_ATOM, 0, 4096);
+    const QByteArray data = property.toByteArray(32, XCB_ATOM_ATOM);
+
+    QList<xcb_atom_t> current(data.size() / sizeof(xcb_atom_t));
+    memcpy(current.data(), data.constData(), current.size() * sizeof(xcb_atom_t));
+
+    QList<xcb_atom_t> updated = current;
+    for (xcb_atom_t atom : std::as_const(s_removedExtraSupported)) {
+        updated.removeAll(atom);
+    }
+    s_removedExtraSupported.clear();
+    for (xcb_atom_t atom : std::as_const(s_extraSupported)) {
+        if (!updated.contains(atom)) {
+            updated.append(atom);
+        }
+    }
+
+    if (updated != current) {
+        xcb_change_property(connection, XCB_PROP_MODE_REPLACE, root, netSupported,
+                            XCB_ATOM_ATOM, 32, updated.size(), updated.constData());
+    }
+}
 
 RootInfo *RootInfo::create()
 {
@@ -126,6 +185,12 @@ RootInfo *RootInfo::create()
 
     s_self = std::make_unique<RootInfo>(supportWindow, "KWin", properties, types, states, properties2, actions);
     return s_self.get();
+}
+
+void RootInfo::activate()
+{
+    NETRootInfo::activate();
+    writeExtraSupported();
 }
 
 void RootInfo::destroy()

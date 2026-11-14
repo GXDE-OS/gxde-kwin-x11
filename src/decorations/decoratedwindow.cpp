@@ -13,6 +13,7 @@
 #include "tiles/tile.h"
 #include "window.h"
 #include "workspace.h"
+#include "x11window.h"
 
 #include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
@@ -79,6 +80,21 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
     connect(window, &Window::targetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::scaleChanged);
     connect(window, &Window::nextTargetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::nextScaleChanged);
     connect(window, &Window::applicationMenuChanged, decoratedClient, &KDecoration3::DecoratedWindow::applicationMenuChanged);
+
+    // KDecoration3 has no notion of X11 window properties. Hand _DEEPIN_NO_TITLEBAR
+    // to the plugin as a dynamic property; a plugin that supports it declares
+    // gxdeDeepinNoTitlebar in its metadata and watches QEvent::DynamicPropertyChange.
+    if (auto x11Window = qobject_cast<X11Window *>(window)) {
+        decoration->setProperty("gxdeDeepinNoTitlebar", x11Window->isDeepinNoTitlebar());
+        connect(x11Window, &X11Window::deepinNoTitlebarChanged, this, [decoration, x11Window]() {
+            decoration->setProperty("gxdeDeepinNoTitlebar", x11Window->isDeepinNoTitlebar());
+        });
+        // Theme overrides published by dxcb for this window.
+        decoration->setProperty("gxdeDeepinWindowTheme", x11Window->deepinWindowTheme());
+        connect(x11Window, &X11Window::deepinWindowThemeChanged, this, [decoration, x11Window]() {
+            decoration->setProperty("gxdeDeepinWindowTheme", x11Window->deepinWindowTheme());
+        });
+    }
 
     m_toolTipWakeUp.setSingleShot(true);
     connect(&m_toolTipWakeUp, &QTimer::timeout, this, [this]() {

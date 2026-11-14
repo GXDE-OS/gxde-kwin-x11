@@ -4,6 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "decorationmodel.h"
+#include "config-kwin.h"
 #include "utils.h"
 // KDecoration3
 #include <KDecoration3/Decoration>
@@ -21,6 +22,9 @@ namespace KDecoration3
 namespace Configuration
 {
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration3");
+// gxde-kwin_x11 keeps its decoration plugins out of the shared namespace, see
+// DecorationBridge.
+static const QString s_pluginNamespace = KWIN_PLUGINDIR + QLatin1Char('/') + s_pluginName;
 
 DecorationsModel::DecorationsModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -111,7 +115,7 @@ void DecorationsModel::init()
 {
     beginResetModel();
     m_plugins.clear();
-    const auto plugins = KPluginMetaData::findPlugins(s_pluginName);
+    const auto plugins = KPluginMetaData::findPlugins(s_pluginNamespace);
     for (const auto &info : plugins) {
         std::unique_ptr<KDecoration3::DecorationThemeProvider> themeFinder(
             KPluginFactory::instantiatePlugin<KDecoration3::DecorationThemeProvider>(info).plugin);

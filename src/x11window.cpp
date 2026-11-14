@@ -23,6 +23,7 @@
 #include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "group.h"
+#include "gxdexsettings.h"
 #include "killprompt.h"
 #include "netinfo.h"
 #include "placement.h"
@@ -680,6 +681,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         xcb_shape_select_input(kwinApp()->x11Connection(), window(), true);
     }
     detectShape();
+    readDeepinNoTitlebar();
+    readDeepinForceDecorate();
+    readDeepinWindowTheme();
     detectNoBorder();
     fetchIconicName();
     setClientFrameExtents(info->gtkFrameExtents());
@@ -1462,7 +1466,8 @@ void X11Window::detectNoBorder()
     // WindowType::Override is some strange beast without clear definition, usually
     // just meaning "noborder", so let's treat it only as such flag, and ignore it as
     // a window type otherwise (SUPPORTED_WINDOW_TYPES_MASK doesn't include it)
-    if (WindowType(info->windowType(NET::OverrideMask)) == WindowType::Override) {
+    // _DEEPIN_FORCE_DECORATE overrides it, as deepin-kwin does by dropping the type.
+    if (WindowType(info->windowType(NET::OverrideMask)) == WindowType::Override && !deepinForceDecorateApplies()) {
         noborder = true;
         app_noborder = true;
     }
@@ -1554,6 +1559,94 @@ void X11Window::checkNoBorder()
     setNoBorder(app_noborder);
 }
 
+static bool readDeepinFlag(xcb_window_t window, xcb_atom_t atom)
+{
+    // dxcb writes these as 8 bit CARDINALs, accept 32 bit ones as well.
+    Xcb::Property property(false, window, atom, XCB_ATOM_CARDINAL, 0, 1);
+    bool ok = false;
+    bool value = property.toBool(8, XCB_ATOM_CARDINAL, &ok);
+    if (!ok) {
+        value = property.toBool(32, XCB_ATOM_CARDINAL, &ok);
+    }
+    return ok && value;
+}
+
+bool X11Window::isDeepinNoTitlebar() const
+{
+    return m_deepinNoTitlebar;
+}
+
+void X11Window::readDeepinNoTitlebar()
+{
+    const bool noTitlebar = readDeepinFlag(window(), atoms->deepin_no_titlebar);
+    if (m_deepinNoTitlebar == noTitlebar) {
+        return;
+    }
+    m_deepinNoTitlebar = noTitlebar;
+    Q_EMIT deepinNoTitlebarChanged();
+}
+
+void X11Window::readDeepinForceDecorate()
+{
+    m_deepinForceDecorate = readDeepinFlag(window(), atoms->deepin_force_decorate);
+}
+
+QVariantMap X11Window::deepinWindowTheme() const
+{
+    return m_deepinWindowTheme;
+}
+
+void X11Window::readDeepinWindowTheme()
+{
+    // dxcb writes the property with its own name as type.
+    Xcb::Property property(false, window(), atoms->xsettings_settings, atoms->xsettings_settings, 0, 16384);
+    const QVariantMap theme = parseXSettings(property.toByteArray(8, atoms->xsettings_settings));
+    if (theme != m_deepinWindowTheme) {
+        m_deepinWindowTheme = theme;
+        Q_EMIT deepinWindowThemeChanged();
+    }
+}
+
+bool X11Window::deepinForceDecorateApplies() const
+{
+    // Only honoured while announced, i.e. while the decoration supports the
+    // Deepin extensions. Same window types as deepin-kwin's canForceSetBorder().
+    if (!m_deepinForceDecorate || is_shape || isUnmanaged() || !RootInfo::isExtraSupported(atoms->deepin_force_decorate)) {
+        return false;
+    }
+    switch (windowType()) {
+    case WindowType::Desktop:
+    case WindowType::Dock:
+    case WindowType::TopMenu:
+    case WindowType::Splash:
+    case WindowType::Notification:
+    case WindowType::OnScreenDisplay:
+    case WindowType::CriticalNotification:
+    case WindowType::AppletPopup:
+        return false;
+    default:
+        return true;
+    }
+}
+
+bool X11Window::motifRequestsNoBorder() const
+{
+    return m_motif.noBorder() && !deepinForceDecorateApplies();
+}
+
+void X11Window::updateDeepinForceDecorate()
+{
+    if (isUnmanaged() || isClientSideDecorated()) {
+        return;
+    }
+    detectNoBorder();
+    if (!app_noborder && motifRequestsNoBorder()) {
+        noborder = true;
+    }
+    noborder = rules()->checkNoBorder(noborder);
+    updateDecoration(true);
+}
+
 void X11Window::detectShape()
 {
     is_shape = Xcb::Extensions::self()->hasShape(window());
@@ -1583,7 +1676,7 @@ void X11Window::updateShape()
         xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
         detectNoBorder();
         app_noborder = noborder;
-        noborder = rules()->checkNoBorder(noborder || m_motif.noBorder());
+        noborder = rules()->checkNoBorder(noborder || motifRequestsNoBorder());
         updateDecoration(true);
     }
 
@@ -2470,7 +2563,7 @@ void X11Window::getMotifHints()
     m_motif.read();
     if (m_motif.hasDecoration() && m_motif.noBorder() != wasNoBorder) {
         // If we just got a hint telling us to hide decorations, we do so.
-        if (m_motif.noBorder()) {
+        if (motifRequestsNoBorder()) {
             noborder = rules()->checkNoBorder(true);
             // If the Motif hint is now telling us to show decorations, we only do so if the app didn't
             // instruct us to hide decorations in some other way, though.
@@ -4615,7 +4708,7 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
         // triggers a maximize change.
         // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore geometry
         changeMaximizeRecursion = true;
-        setNoBorder(rules()->checkNoBorder(app_noborder || (m_motif.hasDecoration() && m_motif.noBorder()) || max_mode == MaximizeFull));
+        setNoBorder(rules()->checkNoBorder(app_noborder || motifRequestsNoBorder() || max_mode == MaximizeFull));
         changeMaximizeRecursion = false;
     }
 

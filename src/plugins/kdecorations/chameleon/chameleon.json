@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Description": "Window decoration for GXDE",
+        "Description[zh_CN]": "GXDE 窗口装饰主题",
+        "EnabledByDefault": true,
+        "Id": "com.deepin.chameleon",
+        "License": "GPL",
+        "Name": "Chameleon",
+        "Name[zh_CN]": "变色龙"
+    },
+    "org.kde.kdecoration3": {
+        "blur": false,
+        "gxdeDeepinNoTitlebar": true,
+        "kcmodule": false
+    }
+}

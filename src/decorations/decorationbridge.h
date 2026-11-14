@@ -12,6 +12,8 @@
 #include <KDecoration3/Private/DecorationBridge>
 #include <QObject>
 
+#include <memory>
+
 class KPluginFactory;
 namespace KDecoration3
 {
@@ -21,6 +23,7 @@ class DecorationSettings;
 namespace KWin
 {
 
+class GxdeXSettingsWatcher;
 class Window;
 
 namespace Decoration
@@ -31,6 +34,7 @@ class KWIN_EXPORT DecorationBridge : public KDecoration3::DecorationBridge
     Q_OBJECT
 public:
     explicit DecorationBridge();
+    ~DecorationBridge() override;
 
     static bool hasPlugin();
 
@@ -69,7 +73,15 @@ private:
     bool initPlugin();
     QString readTheme() const;
     void readDecorationOptions();
+    void updateDeepinSupport();
+    void updateGxdeSettings();
     std::unique_ptr<KPluginFactory> m_factory;
+    // Desktop-wide GXDE settings (XSETTINGS) handed to decorations as dynamic
+    // properties of the shared DecorationSettings object.
+    std::unique_ptr<GxdeXSettingsWatcher> m_xsettings;
+    // The plugin handles _DEEPIN_NO_TITLEBAR (metadata key gxdeDeepinNoTitlebar)
+    bool m_deepinNoTitlebarSupported = false;
+    bool m_deepinSupportAnnounced = false;
     bool m_showToolTips;
     QString m_recommendedBorderSize;
     QString m_plugin;

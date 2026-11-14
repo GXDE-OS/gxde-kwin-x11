@@ -10,14 +10,19 @@
 
 #include "config-kwin.h"
 
+#include "atoms.h"
 #include "decoratedwindow.h"
 #include "decorations_logging.h"
+#include "gxdexsettings.h"
+#include "main.h"
+#include "netinfo.h"
 #include "settings.h"
 // KWin core
 #include "wayland/server_decoration.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "x11window.h"
 
 // KDecoration
 #include <KDecoration3/DecoratedWindow>
@@ -39,12 +44,12 @@ namespace Decoration
 
 static const QString s_aurorae = QStringLiteral("org.kde.kwin.aurorae");
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration3");
+// Decoration plugins built against GXDE's KDecoration 3 live below the
+// gxde-kwin_x11 plugin directory. Plugins in the shared namespace are linked
+// against the upstream library and cannot be loaded into this process.
+static const QString s_pluginNamespace = KWIN_PLUGINDIR + QLatin1Char('/') + s_pluginName;
 static const QString s_configKeyName = QStringLiteral("org.kde.kdecoration2");
-#if HAVE_BREEZE_DECO
-static const QString s_defaultPlugin = BREEZE_KDECORATION_PLUGIN_ID;
-#else
-static const QString s_defaultPlugin = s_aurorae;
-#endif
+static const QString s_defaultPlugin = QStringLiteral("com.deepin.chameleon");
 
 static void migrateAuroraeTheme()
 {
@@ -69,6 +74,23 @@ DecorationBridge::DecorationBridge()
 {
     migrateAuroraeTheme();
     readDecorationOptions();
+
+    if (kwinApp()->x11Connection()) {
+        m_xsettings = std::make_unique<GxdeXSettingsWatcher>();
+        connect(m_xsettings.get(), &GxdeXSettingsWatcher::changed, this, &DecorationBridge::updateGxdeSettings);
+    }
+}
+
+DecorationBridge::~DecorationBridge() = default;
+
+void DecorationBridge::updateGxdeSettings()
+{
+    if (!m_settings) {
+        return;
+    }
+    // Window corner radius of the desktop in logical pixels (dtk-window-radius
+    // of com.deepin.xsettings), invalid if the settings daemon does not set it.
+    m_settings->setProperty("gxdeDeepinWindowRadius", m_xsettings ? m_xsettings->value(QByteArrayLiteral("DTK/WindowRadius")) : QVariant());
 }
 
 QString DecorationBridge::readPlugin()
@@ -107,10 +129,12 @@ void DecorationBridge::init()
         if (waylandServer()) {
             waylandServer()->decorationManager()->setDefaultMode(ServerSideDecorationManagerInterface::Mode::None);
         }
+        updateDeepinSupport();
         return;
     }
     m_plugin = readPlugin();
     m_settings = std::make_shared<KDecoration3::DecorationSettings>(this);
+    updateGxdeSettings();
     if (!initPlugin()) {
         if (m_plugin != s_defaultPlugin) {
             // try loading default plugin
@@ -126,11 +150,36 @@ void DecorationBridge::init()
     if (waylandServer()) {
         waylandServer()->decorationManager()->setDefaultMode(m_factory ? ServerSideDecorationManagerInterface::Mode::Server : ServerSideDecorationManagerInterface::Mode::None);
     }
+    updateDeepinSupport();
+}
+
+void DecorationBridge::updateDeepinSupport()
+{
+    // Announce the Deepin decoration extensions only while the loaded plugin
+    // handles them. dxcb switches DTK windows to its no-titlebar mode as soon
+    // as _DEEPIN_NO_TITLEBAR is in _NET_SUPPORTED, so a plugin that ignores it
+    // would draw a second title bar above the one of the application.
+    const bool supported = !m_noPlugin && m_factory && m_deepinNoTitlebarSupported;
+    qCDebug(KWIN_DECORATIONS) << "Deepin decoration extensions supported:" << supported << "plugin:" << m_plugin;
+    if (!kwinApp()->x11Connection() || supported == m_deepinSupportAnnounced) {
+        return;
+    }
+    m_deepinSupportAnnounced = supported;
+
+    RootInfo::setExtraSupported(atoms->deepin_chameleon, supported);
+    RootInfo::setExtraSupported(atoms->deepin_no_titlebar, supported);
+    RootInfo::setExtraSupported(atoms->deepin_force_decorate, supported);
+
+    for (Window *window : workspace()->windows()) {
+        if (auto x11Window = qobject_cast<X11Window *>(window)) {
+            x11Window->updateDeepinForceDecorate();
+        }
+    }
 }
 
 bool DecorationBridge::initPlugin()
 {
-    const KPluginMetaData metaData = KPluginMetaData::findPluginById(s_pluginName, m_plugin);
+    const KPluginMetaData metaData = KPluginMetaData::findPluginById(s_pluginNamespace, m_plugin);
     if (!metaData.isValid()) {
         qCWarning(KWIN_DECORATIONS) << "Could not locate decoration plugin" << m_plugin;
         return false;
@@ -165,6 +214,7 @@ void DecorationBridge::reconfigure()
             m_plugin = QString();
             m_factory.reset();
             m_settings.reset();
+            updateDeepinSupport();
         } else {
             // decorations enabled now
             init();
@@ -184,6 +234,7 @@ void DecorationBridge::reconfigure()
             m_factory = std::move(oldFactory);
             m_plugin = oldPluginName;
         } else {
+            updateDeepinSupport();
             recreateDecorations();
             // TODO: unload and destroy old plugin
         }
@@ -203,6 +254,7 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
     m_recommendedBorderSize = QString();
     m_theme = QString();
     m_defaultTheme = QString();
+    m_deepinNoTitlebarSupported = false;
 
     // load the settings
     const QJsonValue decoSettings = object.value(s_pluginName);
@@ -211,6 +263,7 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
         return;
     }
     const QVariantMap decoSettingsMap = decoSettings.toObject().toVariantMap();
+    m_deepinNoTitlebarSupported = decoSettingsMap.value(QStringLiteral("gxdeDeepinNoTitlebar")).toBool();
     auto recBorderSizeIt = decoSettingsMap.find(QStringLiteral("recommendedBorderSize"));
     if (recBorderSizeIt != decoSettingsMap.end()) {
         m_recommendedBorderSize = recBorderSizeIt.value().toString();
