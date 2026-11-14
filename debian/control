@@ -156,6 +156,15 @@ Depends:
  ${misc:Depends},
 Description: Experimental GXDE X11 session with GXDE's KWin6
 
+Package: gxde-x11-exp-session
+Section: oldlibs
+Architecture: all
+Depends:
+ gxde-experimental-x11-session,
+ ${misc:Depends},
+Description: transitional package for gxde-experimental-x11-session
+ This is a transitional package. It can safely be removed.
+
 Package: libgxde-kwin-x11-6
 Section: libs
 Architecture: any

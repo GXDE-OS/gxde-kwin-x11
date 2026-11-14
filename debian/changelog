@@ -1,3 +1,18 @@
+gxde-kwin-x11 (4:6.7.6-17) unstable; urgency=medium
+
+  * Restore the epoch; 6.7.6-2 sorted below the 4:6.7.6-16 in the archive.
+  * Port deepin-kwin's chameleon decoration to KDecoration 3 and use it by
+    default. Announce _DEEPIN_CHAMELEON, _DEEPIN_NO_TITLEBAR and
+    _DEEPIN_FORCE_DECORATE so that DTK windows use dxcb's no-titlebar mode.
+  * Rounded windows through KDecoration 3, following DTK/WindowRadius and
+    the per-window theme dxcb publishes. Ship GXDE's chameleon theme values.
+  * Replace the deepin-wm-dbus of the KWin 5 window manager when it holds
+    com.deepin.wm in a gxde-kwin_x11 session.
+  * Add gxde-x11-exp-session as a transitional package for
+    gxde-experimental-x11-session.
+
+ -- CharOfString <root@charofstring.cc>  Fri, 13 Nov 2026 23:56:17 -0600
+
 gxde-kwin-x11 (6.7.6-2) unstable; urgency=medium
 
   [ Aromatic05 ]
